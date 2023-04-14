@@ -14,11 +14,10 @@ class GanglionSampling:
     '''
 
     def __init__(self, parameters):
-        self.r2 = 1.05  # The eccentricity at which density is reduced by a factor of four (and spacing is doubled)
-        self.re = 22  # Scale factor of the exponential. Not used in our version.
-        self.dg = 33162  # Cell density at r = 0
-        self.C = (3.4820e+04 + .1)  # Constant added to the integral to make sure that if x == 0, y == 0.
-        self.bg_color = 127             # Background color for the generated image.
+        self.r2 = 1.05                  # The eccentricity at which density is reduced by a factor of four (and spacing is doubled)
+        self.re = 22                    # Scale factor of the exponential. Not used in our version.
+        self.dg = 33162                 # Cell density at r = 0
+        self.C = (3.4820e+04 + .1)      # Constant added to the integral to make sure that if x == 0, y == 0.
         self.W = None                   # Placeholder for spare matrix used for image transformation when using series_dist method
         self.msk = None                 # Placeholder for mask when using series_dist method
         
@@ -129,6 +128,6 @@ class GanglionSampling:
         image = np.reshape(image, (self.in_res ** 2, self.depth)).squeeze()
         
         # Resample the image
-        return self.W.dot(image).reshape(self.out_res, self.out_res, self.depth)
+        return self.W.dot(image).reshape(self.out_res, self.out_res, self.depth).astype(np.uint8)
 
     
