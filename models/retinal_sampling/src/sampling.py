@@ -58,11 +58,11 @@ class GanglionSampling:
         self.upscaler = dnn_superres.DnnSuperResImpl_create()
 
         # Read the desired model
-        path = "upscaling/LapSRN_x8.pb"
+        path = "upscaling/LapSRN_x4.pb"
         self.upscaler.readModel(path)
 
         # Set the desired model and scale to get correct pre- and post-processing
-        self.upscaler.setModel("lapsrn", 8)
+        self.upscaler.setModel("lapsrn", 4)
 
     def __generate_sampler(self, parameters):
         '''
