@@ -1,0 +1,1 @@
+{"image_size": 256, "num_hidden": 64, "num_recurrent": 32, "num_classes": 11, "dropout": 0.5}
