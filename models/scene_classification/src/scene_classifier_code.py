@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 class SceneClassificationModel(nn.Module):
     def __init__(self, parameters):
         super(SceneClassificationModel, self).__init__()
@@ -57,7 +58,6 @@ class SceneClassificationModel(nn.Module):
             image (torch.Tensor): The input image
             eye_pos (torch.Tensor): The eye position
             recurrent (torch.Tensor): The recurrent state at the previous time step
-            time_step (float): The time step to propagate the recurrent state by
         Returns:
             torch.Tensor: The class probabilities
             torch.Tensor: The recurrent state at the current time step
@@ -101,3 +101,4 @@ class SceneClassificationModel(nn.Module):
             int: The output size
         '''
         return int((input_size - kernel_size + 2 * padding) / stride) + 1
+    
