@@ -8,9 +8,11 @@ class SaliencyROS2Node(Node):
     def __init__(self):
         super().__init__('saliency_node')
         
+        # Set the 'use_sim_time' parameter to True
         use_sim_time = Parameter('use_sim_time', value=True)
         self.set_parameters([use_sim_time])
 
+        # Initialize variables
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
@@ -28,19 +30,22 @@ class SaliencyROS2Node(Node):
         # start the loop
         self.saliency_loop()
 
-    # functions
+    # Callback functions
     def snapshot_callback(self, msg):
         self.salmodel.set_input_tensor(msg.data)
 
     def shutdown_callback(self, msg):
         self.shut_down = msg.data
 
+    # Helper functions
     def get_time(self):
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
+    # Main loop
     def saliency_loop(self):
         while rclpy.ok():
             if self.shut_down:
+                # Shutdown the node
                 rclpy.shutdown()
                 break
 
@@ -49,13 +54,15 @@ class SaliencyROS2Node(Node):
             self.get_time()
             
             if self.node_time>=self.central_time:
+                # Wait for the next time step
                 continue
 
+            # Compute and publish the saliency map
             sal_map = self.salmodel.get_saliency()
             self.saliency_pub.publish(Float32(data=sal_map))
             
-            self.node_time = self.central_time
-            
+            # Update the node time and publish that the node has finished
+            self.node_time = self.central_time        
             self.finished_pub.publish(Bool(data=True))
 
 if __name__ == '__main__':
