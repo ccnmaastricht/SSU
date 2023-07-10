@@ -4,3 +4,5 @@
 *gen_sequences.py 
 *__pycache__*
 *cpython*
+*backup*
+*.pyc
