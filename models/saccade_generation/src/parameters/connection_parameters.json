@@ -1,0 +1,82 @@
+{
+    "connection_ebn_ibn": {
+        "conn_spec": {
+            "p": 0.3,
+            "rule": "pairwise_bernoulli"
+        },
+        "syn_spec": {
+            "delay": 12.0,
+            "model": "static_synapse",
+            "weight": {
+                "distribution": "normal_clipped",
+                "low": 0.0,
+                "mu": 60.0,
+                "sigma": 30.0
+            }
+        }
+    },
+    "connection_ibn_llbn": {
+        "conn_spec": {
+            "p": 0.75,
+            "rule": "pairwise_bernoulli"
+        },
+        "syn_spec": {
+            "delay": 12.0,
+            "model": "static_synapse",
+            "weight": {
+                "distribution": "normal_clipped",
+                "high": 0.0,
+                "mu": -120.0,
+                "sigma": 60.0
+            }
+        }
+    },
+    "connection_llbn_opn": {
+        "conn_spec": {
+            "p": 0.1,
+            "rule": "pairwise_bernoulli"
+        },
+        "syn_spec": {
+            "delay": 12.0,
+            "model": "static_synapse",
+            "weight": {
+                "distribution": "normal_clipped",
+                "high": 0.0,
+                "mu": -120.0,
+                "sigma": 60.0
+            }
+        }
+    },
+    "connection_llbn_slbn": {
+        "conn_spec": {
+            "p": 0.5,
+            "rule": "pairwise_bernoulli"
+        },
+        "syn_spec": {
+            "delay": 12.0,
+            "model": "static_synapse",
+            "weight": {
+                "distribution": "normal_clipped",
+                "low": 0.0,
+                "mu": 60.0,
+                "sigma": 30.0
+            }
+        }
+    },
+    "connection_opn_slbn": {
+        "conn_spec": {
+            "p": 0.25,
+            "rule": "pairwise_bernoulli"
+        },
+        "syn_spec": {
+            "delay": 12.0,
+            "model": "static_synapse",
+            "weight": {
+                "distribution": "normal_clipped",
+                "high": 0.0,
+                "mu": -120.0,
+                "sigma": 60.0
+            }
+        }
+    }
+}

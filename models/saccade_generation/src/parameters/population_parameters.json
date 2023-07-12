@@ -1,0 +1,219 @@
+{
+    "EBN_parameters": {
+        "connection_params": {
+            "ex": {
+                "conn_spec": {
+                    "p": 0.4,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "low": 0.0,
+                        "mu": 6.0,
+                        "sigma": 3.0
+                    }
+                }
+            },
+            "in": {
+                "conn_spec": {
+                    "p": 0.7,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "high": 0.0,
+                        "mu": -12.0,
+                        "sigma": 6.0
+                    }
+                }
+            }
+        },
+        "n_ex": 80,
+        "n_in": 250,
+        "neuron_model": "mat2_psc_exp",
+        "noise": 75.0,
+        "single_neuron_params": {
+            "C_m": 250.0,
+            "E_L": -65.0,
+            "I_e": 200.0,
+            "V_m": -65.0,
+            "alpha_1": -1.2,
+            "alpha_2": 0.85,
+            "omega": -50.0,
+            "t_ref": 2.0,
+            "tau_1": 10.0,
+            "tau_2": 15.0,
+            "tau_m": 10.0,
+            "tau_syn_ex": 0.5,
+            "tau_syn_in": 0.5
+        }
+    },
+    "IBN_parameters": {
+        "connection_params": {
+            "ex": {
+                "conn_spec": {
+                    "p": 0.4,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "low": 0.0,
+                        "mu": 6.0,
+                        "sigma": 3.0
+                    }
+                }
+            },
+            "in": {
+                "conn_spec": {
+                    "p": 0.7,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "high": 0.0,
+                        "mu": -12.0,
+                        "sigma": 6.0
+                    }
+                }
+            }
+        },
+        "n_ex": 0,
+        "n_in": 200,
+        "neuron_model": "mat2_psc_exp",
+        "noise": 15.0,
+        "single_neuron_params": {
+            "C_m": 250.0,
+            "E_L": -65.0,
+            "I_e": 0.0,
+            "V_m": -65.0,
+            "alpha_1": -1.2,
+            "alpha_2": 0.85,
+            "omega": -64.8,
+            "t_ref": 2.0,
+            "tau_1": 10.0,
+            "tau_2": 15.0,
+            "tau_m": 10.0,
+            "tau_syn_ex": 0.5,
+            "tau_syn_in": 0.5
+        }
+    },
+    "LLBN_parameters": {
+        "connection_params": {
+            "ex": {
+                "conn_spec": {
+                    "p": 0.3,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "low": 0.0,
+                        "mu": 6.0,
+                        "sigma": 3.0
+                    }
+                }
+            },
+            "in": {
+                "conn_spec": {
+                    "p": 0.6,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "high": 0.0,
+                        "mu": -12.0,
+                        "sigma": 6.0
+                    }
+                }
+            }
+        },
+        "n_ex": 100,
+        "n_in": 400,
+        "neuron_model": "mat2_psc_exp",
+        "noise": 45.0,
+        "single_neuron_params": {
+            "C_m": 250.0,
+            "E_L": -65.0,
+            "I_e": 200.0,
+            "V_m": -65.0,
+            "alpha_1": -1.2,
+            "alpha_2": 0.85,
+            "omega": -50.0,
+            "t_ref": 2.0,
+            "tau_1": 10.0,
+            "tau_2": 15.0,
+            "tau_m": 10.0,
+            "tau_syn_ex": 0.5,
+            "tau_syn_in": 0.5
+        }
+    },
+    "OPN_parameters": {
+        "connection_params": {
+            "ex": {
+                "conn_spec": {
+                    "p": 0.3,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "low": 0.0,
+                        "mu": 6.0,
+                        "sigma": 3.0
+                    }
+                }
+            },
+            "in": {
+                "conn_spec": {
+                    "p": 0.6,
+                    "rule": "pairwise_bernoulli"
+                },
+                "syn_spec": {
+                    "delay": 2.0,
+                    "model": "static_synapse",
+                    "weight": {
+                        "distribution": "normal_clipped",
+                        "high": 0.0,
+                        "mu": -12.0,
+                        "sigma": 6.0
+                    }
+                }
+            }
+        },
+        "n_ex": 150,
+        "n_in": 200,
+        "neuron_model": "iaf_psc_exp",
+        "noise": 45.0,
+        "single_neuron_params": {
+            "C_m": 250.0,
+            "E_L": -65.0,
+            "I_e": 420.0,
+            "V_m": -65.0,
+            "V_reset": -65.0,
+            "V_th": -50.0,
+            "t_ref": 2.0,
+            "tau_m": 10.0,
+            "tau_syn_ex": 0.5,
+            "tau_syn_in": 0.5
+        }
+    }
+}
