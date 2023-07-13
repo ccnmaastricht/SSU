@@ -92,7 +92,7 @@ class ClassifierROS2Node(Node):
             self.classification_results[key].append(class_probability[i])
 
     def save_classification_results(self):
-        path = os.path.join('results', self.scene)
+        path = os.path.join('/usr/results', self.scene)
         if not os.path.exists(path):
             os.makedirs(path)
             
