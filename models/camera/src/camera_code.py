@@ -61,9 +61,9 @@ class Camera:
 
         x = int(self.eye_pos[0] / self.degrees_per_pixel)
         y = int(self.eye_pos[1] / self.degrees_per_pixel)
-        x_min = np.max(x - self.snapshot_size[0] // 2, 0)
-        x_max = np.min(x + self.snapshot_size[0] // 2, self.scene_size[1])
-        y_min = np.max(y - self.snapshot_size[1] // 2, 0)
-        y_max = np.min(y + self.snapshot_size[1] // 2, self.scene_size[0])
+        x_min = np.maximum(x - self.snapshot_size[0] // 2, 0)
+        x_max = np.minimum(x + self.snapshot_size[0] // 2, self.scene_size[1])
+        y_min = np.maximum(y - self.snapshot_size[1] // 2, 0)
+        y_max = np.minimum(y + self.snapshot_size[1] // 2, self.scene_size[0])
         snapshot = self.scene[y_min:y_max, x_min:x_max]
         return snapshot
