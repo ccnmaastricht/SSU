@@ -36,7 +36,7 @@ class SaccadeROS2Node(Node):
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
 
         # start the loop
-        self.saliency_loop()
+        self.saccade_loop()
 
     # Callback functions
     def target_location_callback(self, msg):
@@ -94,4 +94,4 @@ class SaccadeROS2Node(Node):
 
 if __name__ == '__main__':
     rclpy.init()
-    saliency_node = SaccadeROS2Node()
+    saccade_node = SaccadeROS2Node()
