@@ -4,6 +4,9 @@ FROM osrf/ros:humble-desktop
 LABEL author="Mario Senden"
 LABEL email="mario.senden@maastrichtuniversity.nl"
 
+# Create the data directory
+RUN mkdir -p /usr/results
+
 # Set the working directory
 WORKDIR /usr/src
 
