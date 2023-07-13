@@ -39,7 +39,7 @@ class CameraROS2Node(Node):
         self.shut_down = msg.data
 
     def scene_callback(self, msg):
-        file = os.path.join("scenes", msg.data, "image.png")
+        file = os.path.join("/usr/data", msg.data, "image.png")
         self.camera.set_scene(file)
 
     def target_location_callback(self, msg):
