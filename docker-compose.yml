@@ -1,0 +1,41 @@
+version: '3'
+services:
+  camera:
+    image: camera_node
+    networks:
+      - ssu_network
+    depends_on:
+      - sync_node
+  saliency:
+    image: saliency_node
+    networks:
+      - ssu_network
+    depends_on:
+      - sync_node
+  selection:
+    image: selection_node
+    networks:
+      - ssu_network
+    depends_on:
+      - sync_node
+  saccade:
+    image: saccade_node
+    networks:
+      - ssu_network
+    depends_on:
+      - sync_node
+  classifier:
+    image: classifier_node
+    volumes:
+      - /home/mario/Projects/modularity/SSU/results:/usr/src/results
+    networks:
+      - ssu_network
+    depends_on:
+      - sync_node
+  sync_node:
+    image: sync_node
+    networks:
+      - ssu_network
+networks:
+  ssu_network:
+    driver: bridge
