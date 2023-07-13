@@ -4,10 +4,8 @@ FROM osrf/ros:humble-desktop
 LABEL author="Mario Senden"
 LABEL email="mario.senden@maastrichtuniversity.nl"
 
-RUN mkdir -p /usr/src/sync_node/results
-
 # Set the working directory
-WORKDIR /usr/src/sync_node
+WORKDIR /usr/src
 
 # Copy the source code
 COPY src/ .
