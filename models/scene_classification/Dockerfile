@@ -13,10 +13,13 @@ COPY requirements.txt .
 # Install the required packages
 RUN apt-get update && apt-get install -y python3-pip \
     && pip3 install --no-cache-dir -r requirements.txt
+    
+# Install PyTorch
+RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # Copy the source code
 COPY src/ .
 
-# Start the saliency node
+# Start the scene classification node
 RUN chmod +x run.sh
 CMD ["./run.sh"]

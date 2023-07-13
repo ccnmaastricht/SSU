@@ -17,6 +17,6 @@ RUN apt-get update && apt-get install -y python3-pip \
 # Copy the source code
 COPY src/ .
 
-# Start the saliency node
+# Start the target selection node
 RUN chmod +x run.sh
 CMD ["./run.sh"]
