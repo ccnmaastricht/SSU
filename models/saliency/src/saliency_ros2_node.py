@@ -19,7 +19,7 @@ class SaliencyROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        sef.waiting = False
+        self.waiting = False
         self.message = None
 
 
