@@ -1,11 +1,12 @@
+import os
+
 import json
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32, String
 
 import torch
-import torch.nn as nn
 
 import numpy as np
 import pandas as pd
@@ -53,6 +54,7 @@ class ClassifierROS2Node(Node):
         self.waiting_sub = self.create_subscription(Bool, '/camera_node/waiting', self.waiting_callback, 10)
         self.eye_pos_sub = self.create_subscription(Float32, '/saccade_node/eye_pos', self.eye_pos_callback, 10)
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
+        self.scene_sub = self.create_subscription(String, '/sync_node/scene', self.scene_callback, 10)
 
         # start the loop
         self.classification_loop()
@@ -71,6 +73,9 @@ class ClassifierROS2Node(Node):
     def shutdown_callback(self, msg):
         self.shut_down = msg.data
 
+    def scene_callback(self, msg):
+        self.scene = msg.data
+
     # Helper functions
     def get_time(self):
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
@@ -87,8 +92,13 @@ class ClassifierROS2Node(Node):
             self.classification_results[key].append(class_probability[i])
 
     def save_classification_results(self):
+        path = os.path.join('results', self.scene)
+        if not os.path.exists(path):
+            os.makedirs(path)
+            
+        file = os.path.join(path, 'classification_results.csv')
         df = pd.DataFrame(self.classification_results)
-        df.to_csv('results/classification_results.csv', index=False)
+        df.to_csv(file, index=False)
 
     # Main loop
     def classification_loop(self):
