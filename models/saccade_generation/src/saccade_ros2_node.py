@@ -4,7 +4,7 @@ from rclpy.parameter import Parameter
 from std_msgs.msg import Bool, Float32
 
 import numpy as np
-from saccade_generator import SaccadeGenerator
+from saccade_code import SaccadeGenerator
 
 class SaccadeROS2Node(Node):
     def __init__(self):
