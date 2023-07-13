@@ -1,7 +1,8 @@
+import os
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32, String
 from camera_code import Camera
 
 class CameraROS2Node(Node):
@@ -16,12 +17,9 @@ class CameraROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.message = None
 
         self.camera = Camera()
-        self.camera.set_scene('placeholder')
-
-
+        
         # publishers
         self.snapshot_pub = self.create_publisher(Float32, '/snapshot', 10)
         self.waiting_pub = self.create_publisher(Bool, '/waiting', 10)
@@ -29,6 +27,7 @@ class CameraROS2Node(Node):
 
         # subscribers
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
+        self.scene_sub = self.create_subscription(String, '/sync_node/scene', self.scene_callback, 10)
         self.target_location_sub = self.create_subscription(Float32, '/selection_node/target_location', self.target_location_callback, 10)
         self.eye_pos_sub = self.create_subscription(Float32, '/saccade_node/eye_pos', self.eye_pos_callback, 10)
 
@@ -38,6 +37,10 @@ class CameraROS2Node(Node):
     # Callback functions
     def shutdown_callback(self, msg):
         self.shut_down = msg.data
+
+    def scene_callback(self, msg):
+        file = os.path.join("scenes", msg.data, "image.png")
+        self.camera.set_scene(file)
 
     def target_location_callback(self, msg):
         self.camera.set_target_location(msg.data)
