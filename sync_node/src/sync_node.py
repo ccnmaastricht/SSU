@@ -3,7 +3,7 @@ import rclpy
 import threading
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Float32, Bool
+from std_msgs.msg import Bool, String
 from rosgraph_msgs.msg import Clock
 
 class SyncROSNode(Node):
@@ -11,16 +11,13 @@ class SyncROSNode(Node):
         super().__init__('sync_node')
 
         self.finished_count = 0
-        self.num_nodes = None
-        self.time_step = None
-        self.t_end = None
-        self.current_time = None
+        self.current_time = 0.0
 
         use_sim_time = Parameter('use_sim_time', value=True)
         self.set_parameters([use_sim_time])
 
         # publishers
-        self.is_sim_pub = self.create_publisher(Bool, 'sync_node/issim', 10)
+        self.scene_pub = self.create_publisher(String, 'sync_node/scene', 10)
         self.shut_down_pub = self.create_publisher(Bool, '/sync_node/shutdown', 10)
         self.time_pub = self.create_publisher(Clock, '/clock', 10)
         
@@ -54,14 +51,15 @@ class SyncROSNode(Node):
     def load_config(self, config_file):
         with open(config_file) as f:
             config = json.load(f)
-        self.is_sim = config['is_sim']
         self.num_nodes = config['num_nodes']
         self.time_step = config['time_step']
-        self.t_end = config['t_end']
+        self.viewing_time = config['viewing_time']
+        self.scene = config['scene']
         self.current_time = self.time_step
 
     def run_simulation(self):
-        while self.current_time<self.t_end:
+        self.scene_pub.publish(String(data=self.scene))
+        while self.current_time<self.viewing_time:
             self.publish_time()
 
         self.shutdown()
