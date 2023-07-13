@@ -1,4 +1,3 @@
-# needs to use cv2.cvtColor(img, cv2.COLOR_BGR2RGB) to convert the image to RGB format before publishing it.
 import cv2
 import numpy as np
 
