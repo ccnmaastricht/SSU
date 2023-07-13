@@ -1,31 +1,35 @@
 # Use an official ROS2 base image as the base image
-FROM osrf/ros:humble-desktop
+FROM osrf/ros:foxy-desktop
 
 LABEL author="Mario Senden"
 LABEL email="mario.senden@maastrichtuniversity.nl"
 
-# Install wget
-RUN apt-get update && apt-get install wget
+# Update package list and Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential cmake libreadline6-dev libncurses5-dev libgsl0-dev \
+    python3-dev python3-numpy python3-scipy python3-matplotlib ipython3 python3-nose python3-pip wget
 
-# Set environment variables to control the Miniconda installation.
-ENV MINICONDA_VERSION latest
-ENV CONDA_DIR $HOME/miniconda3
+# Install cython using pip
+RUN pip3 install cython
 
-# Download and install Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-$MINICONDA_VERSION-Linux-x86_64.sh -O ~/miniconda.sh && \
-    chmod +x ~/miniconda.sh && \
-    ~/miniconda.sh -b -p $CONDA_DIR && \
-    rm ~/miniconda.sh
+# Download NEST
+WORKDIR /root
+RUN wget https://github.com/nest/nest-simulator/archive/v2.18.0.tar.gz
+RUN tar -xvzf v2.18.0.tar.gz
+WORKDIR /root/nest-simulator-2.18.0
 
-# Add Miniconda to PATH
-ENV PATH=$CONDA_DIR/bin:$PATH
+# Build and install NEST
+RUN mkdir build
+WORKDIR /root/nest-simulator-2.18.0/build
+RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
+RUN make
+RUN make install
 
-# Update Conda and create NEST environment
-RUN conda update -y conda \
-    && conda create --name nest_env -c conda-forge nest-simulator=2.18.0 python
+WORKDIR /root
+RUN rm -rf nest-simulator-2.18.0 v2.18.0.tar.gz
 
-# Change the default shell to be within the nest_env Conda environment
-SHELL ["conda", "run", "-n", "nest_env", "/bin/bash", "-c"]
+# Add NEST to the PYTHONPATH
+ENV PYTHONPATH $PYTHONPATH:/usr/lib/x86_64-linux-gnu/python3.10/site-packages
 
 # Set the working directory
 WORKDIR /usr/src
@@ -34,7 +38,7 @@ WORKDIR /usr/src
 COPY requirements.txt .
 
 # Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the source code
 COPY src/ .

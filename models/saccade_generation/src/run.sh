@@ -3,11 +3,8 @@
 # Trap signals to shut down the Docker container
 trap "exit" SIGINT SIGTERM
 
-# Activate the NEST environment
-source $CONDA_DIR/bin/activate nest_env
-
 # Start the ROS node
-python saccade_ros2_node.py &
+python3 saccade_ros2_node.py &
 
 # Store the PID of the ROS node
 pid=$!
