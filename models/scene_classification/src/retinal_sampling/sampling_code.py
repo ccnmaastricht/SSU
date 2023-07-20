@@ -114,7 +114,7 @@ class GanglionSampling:
             
 
         # Build the sparse matrix for image conversion
-        self.W = sparse((self.out_res ** 2, self.in_res ** 2), dtype=np.float)
+        self.W = sparse((self.out_res ** 2, self.in_res ** 2), dtype=float)
         for i in range(self.out_res ** 2):
             x = np.minimum(np.maximum([np.floor(y_n[i]), np.ceil(y_n[i])], 0), self.in_res - 1)
             y = np.minimum(np.maximum([np.floor(x_n[i]), np.ceil(x_n[i])], 0), self.in_res - 1)
