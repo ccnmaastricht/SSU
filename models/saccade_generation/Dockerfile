@@ -14,22 +14,22 @@ RUN pip3 install cython
 
 # Download NEST
 WORKDIR /root
-RUN wget https://github.com/nest/nest-simulator/archive/v2.18.0.tar.gz
-RUN tar -xvzf v2.18.0.tar.gz
-WORKDIR /root/nest-simulator-2.18.0
+RUN wget https://github.com/nest/nest-simulator/archive/v2.20.0.tar.gz
+RUN tar -xvzf v2.20.0.tar.gz
+WORKDIR /root/nest-simulator-2.20.0
 
 # Build and install NEST
 RUN mkdir build
-WORKDIR /root/nest-simulator-2.18.0/build
+WORKDIR /root/nest-simulator-2.20.0/build
 RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
 RUN make
 RUN make install
 
 WORKDIR /root
-RUN rm -rf nest-simulator-2.18.0 v2.18.0.tar.gz
+RUN rm -rf nest-simulator-2.20.0 v2.20.0.tar.gz
 
 # Add NEST to the PYTHONPATH
-ENV PYTHONPATH $PYTHONPATH:/usr/lib/x86_64-linux-gnu/python3.10/site-packages
+ENV PYTHONPATH $PYTHONPATH:/usr/lib/x86_64-linux-gnu/python3.8/site-packages
 
 # Set the working directory
 WORKDIR /usr/src
