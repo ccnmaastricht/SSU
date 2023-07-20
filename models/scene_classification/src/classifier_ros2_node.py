@@ -40,7 +40,7 @@ class ClassifierROS2Node(Node):
         self.classmodel = SceneClassificationModel(model_parameters)
         self.classmodel.load_state_dict(torch.load("./classification_model/saved_model.pt", map_location=self.device))
         self.classmodel.eval()
-        self.recurrent = self.classmodel.init_recurrent_state()
+        self.recurrent = self.classmodel.init_recurrent()
 
         # classification results
         self.classification_results = {'office': [], 'conferenceRoom': [], 'hallway': [], 'auditorium': [], 'openspace': [],
