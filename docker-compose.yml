@@ -13,25 +13,25 @@ services:
     networks:
       - ssu_network
     depends_on:
-      - sync_node
+      - camera
   saccade:
     image: saccade_node
     networks:
       - ssu_network
     depends_on:
-      - sync_node
+      - camera
   saliency:
     image: saliency_node
     networks:
       - ssu_network
     depends_on:
-      - sync_node
+      - camera
   selection:
     image: selection_node
     networks:
       - ssu_network
     depends_on:
-      - sync_node
+      - camera
   sync_node:
     image: sync_node
     networks:
