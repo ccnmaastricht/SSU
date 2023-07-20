@@ -63,7 +63,7 @@ class SelectionROS2Node(Node):
                 # Wait for the next time step
                 continue
 
-            if self.waiting:
+            if (self.waiting) or (self.saliency is None):
                 # Wait for snapshot
                 continue
 
