@@ -19,7 +19,7 @@ class SaliencyROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = False
+        self.waiting = True
         self.message = None
 
 
@@ -79,6 +79,8 @@ class SaliencyROS2Node(Node):
 
             # Compute and publish the saliency map
             sal_map = self.salmodel.get_saliency_map()
+            # print data type of sal_map
+            print(type(sal_map))
             self.saliency_pub.publish(Float32(data=sal_map))
             
             # Update the node time and publish that the node has finished

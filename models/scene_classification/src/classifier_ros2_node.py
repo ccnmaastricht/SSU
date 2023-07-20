@@ -25,8 +25,7 @@ class ClassifierROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = False
-        self.message = None
+        self.waiting = True
 
         # sampling model
         with open("./retinal_sampling/sampling_parameters.json") as file:
@@ -62,13 +61,13 @@ class ClassifierROS2Node(Node):
     # Callback functions
     def snapshot_callback(self, msg):
         resampled = np.clip(self.sampler.resample_image(msg.data) / 127.5 - 1, -1, 1)
-        self.classmodel.set_snapshot(resampled)
+        self.set_snapshot(resampled)
 
     def waiting_callback(self, msg):
         self.waiting = msg.data
 
     def eye_pos_callback(self, msg):
-        self.classmodel.set_eye_pos(msg.data)
+        self.set_eye_pos(msg.data)
 
     def shutdown_callback(self, msg):
         self.shut_down = msg.data

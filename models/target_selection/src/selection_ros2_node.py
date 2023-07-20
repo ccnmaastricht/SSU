@@ -19,7 +19,7 @@ class SelectionROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = False
+        self.waiting = True
         self.message = None
         self.saliency = None
 
