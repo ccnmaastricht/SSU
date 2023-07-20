@@ -26,7 +26,7 @@ class SelectionROS2Node(Node):
 
         # publishers
         self.finished_pub = self.create_publisher(Bool, '/finished', 10)
-        self.saliency_pub = self.create_publisher(Float32, '/eye_pos', 10)
+        self.target_pub = self.create_publisher(Float32, '/target_location', 10)
 
         # subscribers
         self.snapshot_sub = self.create_subscription(Float32, '/saliency_node/saliency', self.saliency_callback, 10)
@@ -67,8 +67,8 @@ class SelectionROS2Node(Node):
                 continue
 
             # Compute and publish eye position
-            eye_pos = self.model.sample_location(self.saliency)
-            self.saliency_pub.publish(Float32(data=eye_pos))
+            target_location = self.model.sample_location(self.saliency)
+            self.target_pub.publish(Float32(data=target_location))
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
