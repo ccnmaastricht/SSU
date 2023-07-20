@@ -1,5 +1,5 @@
 # Use an official ROS2 base image as the base image
-FROM osrf/ros:foxy-desktop
+FROM osrf/ros:humble-desktop
 
 LABEL author="Mario Senden"
 LABEL email="mario.senden@maastrichtuniversity.nl"
@@ -29,7 +29,7 @@ WORKDIR /root
 RUN rm -rf nest-simulator-2.20.0 v2.20.0.tar.gz
 
 # Add NEST to the PYTHONPATH
-ENV PYTHONPATH $PYTHONPATH:/usr/lib/x86_64-linux-gnu/python3.8/site-packages
+ENV PYTHONPATH $PYTHONPATH:/usr/lib/x86_64-linux-gnu/python3.10/site-packages
 
 # Set the working directory
 WORKDIR /usr/src
