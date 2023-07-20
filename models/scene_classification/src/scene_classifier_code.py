@@ -86,7 +86,7 @@ class SceneClassificationModel(nn.Module):
             torch.Tensor: The initialized recurrent state
         '''
 
-        return torch.zeros(1, self.num_recurrent).cuda()
+        return torch.zeros(1, self.num_recurrent)
     
     
     @staticmethod
