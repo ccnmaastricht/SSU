@@ -20,8 +20,6 @@ class SaliencyROS2Node(Node):
         self.central_time = 0.0
         self.shut_down = False
         self.waiting = True
-        self.message = None
-
 
         with open("./saliency_model/parameters.json") as file:
             parameters = json.load(file)

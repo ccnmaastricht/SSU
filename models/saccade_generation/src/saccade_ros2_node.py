@@ -18,7 +18,6 @@ class SaccadeROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.message = None
 
         self.saccade_generator = SaccadeGenerator()
         self.target_location = np.zeros(2)
