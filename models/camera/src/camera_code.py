@@ -59,11 +59,16 @@ class Camera:
             np.ndarray: The snapshot
         '''
 
-        x = int(self.eye_pos[0] / self.degrees_per_pixel)
-        y = int(self.eye_pos[1] / self.degrees_per_pixel)
-        x_min = np.maximum(x - self.snapshot_size[0] // 2, 0)
-        x_max = np.minimum(x + self.snapshot_size[0] // 2, self.scene_size[1])
-        y_min = np.maximum(y - self.snapshot_size[1] // 2, 0)
-        y_max = np.minimum(y + self.snapshot_size[1] // 2, self.scene_size[0])
+        x = int(self.eye_pos[0] / self.degrees_per_pixel) + self.scene_size[1] // 2
+        y = int(self.eye_pos[1] / self.degrees_per_pixel) + self.scene_size[0] // 2
+        half_width = self.snapshot_size[0] // 2
+        half_height = self.snapshot_size[1] // 2
+
+        x_min = np.clip(x - half_width, 0, self.scene_size[1] - self.snapshot_size[0])
+        x_max = x_min + self.snapshot_size[0]
+
+        y_min = np.clip(y - half_height, 0, self.scene_size[0] - self.snapshot_size[1])
+        y_max = y_min + self.snapshot_size[1]
+
         snapshot = self.scene[y_min:y_max, x_min:x_max]
         return snapshot
