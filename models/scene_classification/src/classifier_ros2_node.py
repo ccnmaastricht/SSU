@@ -122,7 +122,7 @@ class ClassifierROS2Node(Node):
                 continue
 
             # Run the classification model on the current snapshot and eye position
-            class_probability, self.recurrent = self.classmodel.foward(self.snapshot, self.eye_pos, self.recurrent)
+            class_probability, self.recurrent = self.classmodel.forward(self.snapshot, self.eye_pos, self.recurrent)
             class_probability = class_probability.detach().numpy()
             
             # Update the classification results
