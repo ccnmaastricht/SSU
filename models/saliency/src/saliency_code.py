@@ -77,6 +77,6 @@ class Saliency:
 
         self.saliency_map *= np.exp(-self.time_step * self.decay_rate)
         local_saliency = self.compute_local_saliency()[:, 40:280]
-        local_saliency = cv2.resize(local_saliency, self.snapshot_size, interp=cv2.INTER_CUBIC)
+        local_saliency = cv2.resize(local_saliency, self.snapshot_size, interpolation=cv2.INTER_CUBIC)
         self.saliency_map[y_min:y_max, x_min:x_max] = local_saliency
     
