@@ -73,7 +73,7 @@ class CameraROS2Node(Node):
 
             # Compute distance to target and publish waiting
             distance = self.camera.compute_distance()
-            if distance > 1.0:
+            if (distance > 1.0) or (self.camera.scene is None):
                 self.waiting_pub.publish(Bool(data=True))
                 continue
             else:
