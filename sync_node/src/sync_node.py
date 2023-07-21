@@ -26,7 +26,7 @@ class SyncROSNode(Node):
         self.finished_sub = self.create_subscription(Int32, '/finished', self.finished_callback, 10)
 
         # Load config file
-        self.load_config('sim_config.json')
+        self.load_config('simulation_configuration.json')
         
  
     def publish_time(self):
