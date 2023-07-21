@@ -44,6 +44,7 @@ class SyncROSNode(Node):
             self.advance_time()
             self.finished_nodes.clear()
             self.finished_count = 0
+        
 
     def advance_time(self): ## make sure that sarting and finishing works properly across nodes
         self.current_time += self.time_step
