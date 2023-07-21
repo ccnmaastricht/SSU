@@ -1,3 +1,4 @@
+import os
 import json
 import rclpy
 import threading
@@ -26,7 +27,8 @@ class SyncROSNode(Node):
         self.finished_sub = self.create_subscription(Int32, '/finished', self.finished_callback, 10)
 
         # Load config file
-        self.load_config('simulation_configuration.json')
+        file = os.path.join("/usr/config", "simulation_configuration.json")
+        self.load_config(file)
         
  
     def publish_time(self):

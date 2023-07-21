@@ -34,6 +34,8 @@ services:
       - camera_node
   sync_node:
     image: sync_node
+    volumes:
+      - ./config:/usr/config
     networks:
       - ssu_network
 networks:

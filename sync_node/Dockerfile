@@ -7,6 +7,9 @@ LABEL email="mario.senden@maastrichtuniversity.nl"
 # Set the working directory
 WORKDIR /usr/src
 
+# Create the configuration directory
+RUN mkdir -p /usr/config
+
 # Copy the source code
 COPY src/ .
 
