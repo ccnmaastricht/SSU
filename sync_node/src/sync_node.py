@@ -58,10 +58,10 @@ class SyncROSNode(Node):
         self.current_time = self.time_step
 
     def run_simulation(self):
-        self.scene_pub.publish(String(data=self.scene))
         while self.current_time<self.viewing_time:
+            self.scene_pub.publish(String(data=self.scene))
             self.publish_time()
-
+            
         self.shutdown()
 
 
