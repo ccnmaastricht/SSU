@@ -9,7 +9,7 @@ services:
   classifier_node:
     image: classifier_node
     volumes:
-      - /home/mario/Projects/modularity/SSU/results:/usr/results
+      - ./results:/usr/results
     networks:
       - ssu_network
     depends_on:
