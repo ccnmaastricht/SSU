@@ -62,7 +62,7 @@ class SelectionROS2Node(Node):
 
             self.get_time()
 
-            self.target_pub.publish(Float32MultiArray(data=target_location))
+            
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
@@ -75,8 +75,9 @@ class SelectionROS2Node(Node):
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
-            # Compute target location
+            # Compute target location and publish it
             target_location = self.model.sample_location(self.saliency)
+            self.target_pub.publish(Float32MultiArray(data=target_location))
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        

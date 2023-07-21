@@ -86,8 +86,6 @@ class CameraROS2Node(Node):
 
             self.get_time()
 
-            self.publish_snapshot(snapshot)
-
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
@@ -102,8 +100,9 @@ class CameraROS2Node(Node):
             
             self.waiting_pub.publish(Bool(data=False))
             
-            # Extract the current snapshot
+            # Extract the current snapshot and publish it
             snapshot = self.camera.get_snapshot()
+            self.publish_snapshot(snapshot)
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        

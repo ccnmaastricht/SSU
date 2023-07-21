@@ -87,9 +87,7 @@ class SaliencyROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-
-            self.publish_salience(sal_map)
-            
+ 
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
@@ -102,6 +100,7 @@ class SaliencyROS2Node(Node):
 
             # Compute the saliency map
             sal_map = self.salmodel.get_saliency_map()
+            self.publish_salience(sal_map)
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
