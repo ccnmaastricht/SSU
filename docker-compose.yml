@@ -1,37 +1,37 @@
 version: '3'
 services:
-  camera:
+  camera_node:
     image: camera_node
     networks:
       - ssu_network
     depends_on:
       - sync_node
-  classifier:
+  classifier_node:
     image: classifier_node
     volumes:
       - /home/mario/Projects/modularity/SSU/results:/usr/src/results
     networks:
       - ssu_network
     depends_on:
-      - camera
-  saccade:
+      - camera_node
+  saccade_node:
     image: saccade_node
     networks:
       - ssu_network
     depends_on:
-      - camera
-  saliency:
+      - camera_node
+  saliency_node:
     image: saliency_node
     networks:
       - ssu_network
     depends_on:
-      - camera
-  selection:
+      - camera_node
+  selection_node:
     image: selection_node
     networks:
       - ssu_network
     depends_on:
-      - camera
+      - camera_node
   sync_node:
     image: sync_node
     networks:
