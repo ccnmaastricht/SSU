@@ -25,8 +25,10 @@ class ClassifierROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = True
+        self.waiting = False
         self.node_id = 4
+        self.eye_pos = torch.zeros((1,2))
+
 
         # sampling model
         with open("./retinal_sampling/sampling_parameters.json") as file:
@@ -41,6 +43,7 @@ class ClassifierROS2Node(Node):
         self.classmodel.load_state_dict(torch.load("./classification_model/saved_model.pt", map_location=self.device))
         self.classmodel.eval()
         self.recurrent = self.classmodel.init_recurrent()
+        self.snapshot = torch.zeros((1, 3, model_parameters['image_size'], model_parameters['image_size'])).to(self.device)
 
         # classification results
         self.classification_results = {'office': [], 'conferenceRoom': [], 'hallway': [], 'auditorium': [], 'openspace': [],
@@ -87,10 +90,11 @@ class ClassifierROS2Node(Node):
 
     def set_snapshot(self,snapshot):
         if not np.isscalar(snapshot):
-            self.snapshot = torch.from_numpy(np.array(snapshot)).permute(0, 3, 1, 2).float().to(self.device)
+            self.snapshot = torch.unsqueeze(torch.from_numpy(np.array(snapshot)).permute(2, 0, 1).float().to(self.device),0)
+            
     
     def set_eye_pos(self,eye_pos):
-        self.eye_pos = torch.from_numpy(np.array(eye_pos)).float().to(self.device)
+        self.eye_pos = torch.unsqueeze(torch.from_numpy(np.array(eye_pos)).float().to(self.device),0)
 
     def update_classification_results(self, class_probability):
         for i, key in enumerate(self.classification_results):
@@ -127,12 +131,11 @@ class ClassifierROS2Node(Node):
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
-            print('Classification node: ', self.central_time)
             # Run the classification model on the current snapshot and eye position
-            class_probability, self.recurrent = self.classmodel.forward(self.snapshot, self.eye_pos, self.recurrent)
-            class_probability = class_probability.detach().numpy()
-            print(class_probability)
-            
+            log_softmax, self.recurrent = self.classmodel(self.snapshot, self.eye_pos, self.recurrent)
+            log_softmax = log_softmax.detach().numpy()[0]
+            class_probability = np.exp(log_softmax) 
+        
             # Update the classification results
             self.update_classification_results(class_probability)
             

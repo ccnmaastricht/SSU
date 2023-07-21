@@ -19,7 +19,7 @@ class SelectionROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = True
+        self.waiting = False
         self.saliency = None
         self.node_id = 5
 
@@ -27,10 +27,10 @@ class SelectionROS2Node(Node):
 
         # publishers
         self.finished_pub = self.create_publisher(Int32, '/finished', 10)
-        self.target_pub = self.create_publisher(Float32MultiArray, '/target_location', 10)
+        self.target_pub = self.create_publisher(Float32MultiArray, '/selection_node/target_location', 10)
 
         # subscribers
-        self.snapshot_sub = self.create_subscription(Float32MultiArray, '/saliency_node/saliency', self.saliency_callback, 10)
+        self.saliency_sub = self.create_subscription(Float32MultiArray, '/saliency_node/saliency', self.saliency_callback, 10)
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
 
         # start the loop
@@ -38,7 +38,9 @@ class SelectionROS2Node(Node):
 
     # Callback functions
     def saliency_callback(self, msg):
-        self.saliency = np.array(msg.data).reshape(2048, 4096)
+        saliency = np.array(msg.data)
+        self.saliency = saliency.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size))
+            
         
     def shutdown_callback(self, msg):
         self.shut_down = msg.data
@@ -49,6 +51,7 @@ class SelectionROS2Node(Node):
 
     # Main loop
     def selection_loop(self):
+        target_location = np.zeros(2)
         while rclpy.ok():
             if self.shut_down:
                 # Shutdown the node
@@ -58,20 +61,22 @@ class SelectionROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
+
+            self.target_pub.publish(Float32MultiArray(data=target_location))
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
-
+            
+            
             if (self.waiting) or (self.saliency is None):
                 # Wait for snapshot
                 self.node_time = self.central_time   
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
-            # Compute and publish eye position
+            # Compute target location
             target_location = self.model.sample_location(self.saliency)
-            self.target_pub.publish(Float32MultiArray(data=target_location))
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        

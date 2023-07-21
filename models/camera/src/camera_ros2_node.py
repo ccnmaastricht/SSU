@@ -23,8 +23,8 @@ class CameraROS2Node(Node):
         self.camera = Camera()
         
         # publishers
-        self.snapshot_pub = self.create_publisher(Float32MultiArray, '/snapshot', 10)
-        self.waiting_pub = self.create_publisher(Bool, '/waiting', 10)
+        self.snapshot_pub = self.create_publisher(Float32MultiArray, '/camera_node/snapshot', 10)
+        self.waiting_pub = self.create_publisher(Bool, '/camera_node/waiting', 10)
         self.finished_pub = self.create_publisher(Int32, '/finished', 10)
 
         # subscribers
@@ -75,7 +75,7 @@ class CameraROS2Node(Node):
 
     # Main loop
     def camera_loop(self):
-
+        snapshot = np.zeros((1024, 1024, 3))
         while rclpy.ok():
             if self.shut_down:
                 # Shutdown the node
@@ -85,10 +85,12 @@ class CameraROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
+
+            self.publish_snapshot(snapshot)
+
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
-
 
             # Compute distance to target and publish waiting
             distance = self.camera.compute_distance()
@@ -100,10 +102,8 @@ class CameraROS2Node(Node):
             
             self.waiting_pub.publish(Bool(data=False))
             
-            # Extract and publish the current snapshot
+            # Extract the current snapshot
             snapshot = self.camera.get_snapshot()
-            self.publish_snapshot(snapshot)
-
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        

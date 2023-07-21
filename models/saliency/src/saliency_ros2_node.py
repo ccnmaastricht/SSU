@@ -19,7 +19,7 @@ class SaliencyROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
-        self.waiting = True
+        self.waiting = False
         self.node_id = 3
 
         with open("./saliency_model/parameters.json") as file:
@@ -28,7 +28,7 @@ class SaliencyROS2Node(Node):
 
         # publishers
         self.finished_pub = self.create_publisher(Int32, '/finished', 10)
-        self.saliency_pub = self.create_publisher(Float32MultiArray, '/saliency', 10)
+        self.saliency_pub = self.create_publisher(Float32MultiArray, '/saliency_node/saliency', 10)
 
         # subscribers
         self.snapshot_sub = self.create_subscription(Float32MultiArray, '/camera_node/snapshot', self.snapshot_callback, 10)
@@ -38,7 +38,7 @@ class SaliencyROS2Node(Node):
 
         # start the loop
         self.saliency_loop()
-
+    
     def publish_salience(self, sal_map):
         msg = Float32MultiArray()
         msg.layout.dim.append(MultiArrayDimension())
@@ -60,7 +60,7 @@ class SaliencyROS2Node(Node):
         snapshot = snapshot.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size, msg.layout.dim[2].size))
         
         # Set the input tensor of the saliency model
-        self.salmodel.set_input_tensor(snapshot)
+        #self.salmodel.set_input_tensor(snapshot)
 
     def waiting_callback(self, msg):
         self.waiting = msg.data
@@ -77,6 +77,7 @@ class SaliencyROS2Node(Node):
 
     # Main loop
     def saliency_loop(self):
+        sal_map = np.zeros((2048, 4096))
         while rclpy.ok():
             if self.shut_down:
                 # Shutdown the node
@@ -86,6 +87,8 @@ class SaliencyROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
+
+            self.publish_salience(sal_map)
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
@@ -97,9 +100,8 @@ class SaliencyROS2Node(Node):
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
-            # Compute and publish the saliency map
+            # Compute the saliency map
             sal_map = self.salmodel.get_saliency_map()
-            self.publish_salience(sal_map)
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
