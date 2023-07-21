@@ -3,7 +3,7 @@ import numpy as np
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32MultiArray, String
+from std_msgs.msg import Bool, String, Int32, Float32MultiArray,  MultiArrayDimension
 from camera_code import Camera
 
 class CameraROS2Node(Node):
@@ -18,13 +18,14 @@ class CameraROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
+        self.node_id = 1
 
         self.camera = Camera()
         
         # publishers
         self.snapshot_pub = self.create_publisher(Float32MultiArray, '/snapshot', 10)
         self.waiting_pub = self.create_publisher(Bool, '/waiting', 10)
-        self.finished_pub = self.create_publisher(Bool, '/finished', 10)
+        self.finished_pub = self.create_publisher(Int32, '/finished', 10)
 
         # subscribers
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
@@ -51,6 +52,7 @@ class CameraROS2Node(Node):
         msg.layout.dim[2].stride = snapshot.shape[2]
         msg.data = snapshot.reshape(snapshot.size).tolist()
         self.snapshot_pub.publish(msg)
+
 
     # Callback functions
     def shutdown_callback(self, msg):
@@ -83,7 +85,6 @@ class CameraROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-            print(f'camera node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
@@ -106,7 +107,7 @@ class CameraROS2Node(Node):
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
-            self.finished_pub.publish(Bool(data=True))
+            self.finished_pub.publish(Int32(data=self.node_id))
 
 if __name__ == '__main__':
     rclpy.init()

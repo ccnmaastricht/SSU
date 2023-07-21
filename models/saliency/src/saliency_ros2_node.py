@@ -2,7 +2,7 @@ import json
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32MultiArray
+from std_msgs.msg import Bool, Int32, Float32MultiArray, MultiArrayDimension
 
 import numpy as np
 from saliency_code import Saliency
@@ -20,13 +20,14 @@ class SaliencyROS2Node(Node):
         self.central_time = 0.0
         self.shut_down = False
         self.waiting = True
+        self.node_id = 3
 
         with open("./saliency_model/parameters.json") as file:
             parameters = json.load(file)
         self.salmodel = Saliency(parameters)
 
         # publishers
-        self.finished_pub = self.create_publisher(Bool, '/finished', 10)
+        self.finished_pub = self.create_publisher(Int32, '/finished', 10)
         self.saliency_pub = self.create_publisher(Float32MultiArray, '/saliency', 10)
 
         # subscribers
@@ -82,6 +83,7 @@ class SaliencyROS2Node(Node):
                 rclpy.shutdown()
                 break
 
+            print('saliency node - waiting for snapshot')
             rclpy.spin_once(self)
 
             self.get_time()
@@ -102,7 +104,7 @@ class SaliencyROS2Node(Node):
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
-            self.finished_pub.publish(Bool(data=True))
+            self.finished_pub.publish(Int32(data=self.node_id))
 
 if __name__ == '__main__':
     rclpy.init()

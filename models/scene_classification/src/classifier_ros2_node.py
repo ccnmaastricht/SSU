@@ -4,7 +4,7 @@ import json
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32MultiArray, String
+from std_msgs.msg import Bool, Int32, Float32MultiArray, String
 
 import torch
 
@@ -26,6 +26,7 @@ class ClassifierROS2Node(Node):
         self.central_time = 0.0
         self.shut_down = False
         self.waiting = True
+        self.node_id = 4
 
         # sampling model
         with open("./retinal_sampling/sampling_parameters.json") as file:
@@ -46,7 +47,7 @@ class ClassifierROS2Node(Node):
                                        'lobby': [], 'lounge': [], 'pantry': [], 'copyRoom': [], 'storage': [], 'WC': []}
 
         # publishers
-        self.finished_pub = self.create_publisher(Bool, '/finished', 10)
+        self.finished_pub = self.create_publisher(Int32, '/finished', 10)
 
         # subscribers
         self.snapshot_sub = self.create_subscription(Float32MultiArray, '/camera_node/snapshot', self.snapshot_callback, 10)
@@ -136,7 +137,7 @@ class ClassifierROS2Node(Node):
             
             # Update the node time and publish that the classification is finished
             self.node_time = self.central_time
-            self.finished_pub.publish(Bool(data=True))
+            self.finished_pub.publish(Int32(data=self.node_id))
 
 if __name__ == '__main__':
     rclpy.init()

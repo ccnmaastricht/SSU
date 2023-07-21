@@ -2,7 +2,7 @@ import json
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32MultiArray
+from std_msgs.msg import Bool, Int32, Float32MultiArray
 
 import numpy as np
 from selection_code import TargetSelection
@@ -21,11 +21,12 @@ class SelectionROS2Node(Node):
         self.shut_down = False
         self.waiting = True
         self.saliency = None
+        self.node_id = 5
 
         self.model = TargetSelection()
 
         # publishers
-        self.finished_pub = self.create_publisher(Bool, '/finished', 10)
+        self.finished_pub = self.create_publisher(Int32, '/finished', 10)
         self.target_pub = self.create_publisher(Float32MultiArray, '/target_location', 10)
 
         # subscribers
@@ -57,13 +58,10 @@ class SelectionROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-            print(f'selection node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
-
-            print(f'selection node - salience: {self.saliency}')
 
             if (self.waiting) or (self.saliency is None):
                 # Wait for snapshot
@@ -76,7 +74,7 @@ class SelectionROS2Node(Node):
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
-            self.finished_pub.publish(Bool(data=True))
+            self.finished_pub.publish(Int32(data=self.node_id))
 
 if __name__ == '__main__':
     rclpy.init()

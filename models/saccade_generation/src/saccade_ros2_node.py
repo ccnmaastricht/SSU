@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32MultiArray
+from std_msgs.msg import Bool, Int32, Float32MultiArray
 
 import numpy as np
 from saccade_code import SaccadeGenerator
@@ -18,6 +18,7 @@ class SaccadeROS2Node(Node):
         self.node_time = 0.0
         self.central_time = 0.0
         self.shut_down = False
+        self.node_id = 2
 
         self.saccade_generator = SaccadeGenerator()
         self.target_location = np.zeros(2)
@@ -27,7 +28,7 @@ class SaccadeROS2Node(Node):
         self.min_current = 300.0
 
         # publishers
-        self.finished_pub = self.create_publisher(Bool, '/finished', 10)
+        self.finished_pub = self.create_publisher(Int32, '/finished', 10)
         self.eye_pos_pub = self.create_publisher(Float32MultiArray, '/eye_pos', 10)
 
         # subscribers
@@ -90,7 +91,7 @@ class SaccadeROS2Node(Node):
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
-            self.finished_pub.publish(Bool(data=True))
+            self.finished_pub.publish(Int32(data=self.node_id))
 
 if __name__ == '__main__':
     rclpy.init()

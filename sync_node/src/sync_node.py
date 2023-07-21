@@ -3,7 +3,7 @@ import rclpy
 import threading
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, String
+from std_msgs.msg import Bool, String, Int32
 from rosgraph_msgs.msg import Clock
 
 class SyncROSNode(Node):
@@ -11,6 +11,7 @@ class SyncROSNode(Node):
         super().__init__('sync_node')
 
         self.finished_count = 0
+        self.finished_nodes = set()
         self.current_time = 0.0
 
         use_sim_time = Parameter('use_sim_time', value=True)
@@ -22,7 +23,7 @@ class SyncROSNode(Node):
         self.time_pub = self.create_publisher(Clock, '/clock', 10)
         
         # subscribers
-        self.finished_sub = self.create_subscription(Bool, '/finished', self.finished_callback, 10)
+        self.finished_sub = self.create_subscription(Int32, '/finished', self.finished_callback, 10)
 
         # Load config file
         self.load_config('sim_config.json')
@@ -36,9 +37,12 @@ class SyncROSNode(Node):
         self.time_pub.publish(msg)
 
     def finished_callback(self, msg):
-        self.finished_count += 1
+        if msg.data not in self.finished_nodes:
+            self.finished_nodes.add(msg.data)
+            self.finished_count += 1
         if self.finished_count == self.num_nodes:
             self.advance_time()
+            self.finished_nodes.clear()
             self.finished_count = 0
 
     def advance_time(self): ## make sure that sarting and finishing works properly across nodes
