@@ -85,7 +85,6 @@ class CameraROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-            
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
@@ -95,7 +94,8 @@ class CameraROS2Node(Node):
             distance = self.camera.compute_distance()
             if (distance > 1.0) or (self.camera.scene is None):
                 self.waiting_pub.publish(Bool(data=True))
-                self.finished_pub.publish(Bool(data=True))
+                self.node_time = self.central_time   
+                self.finished_pub.publish(Int32(data=self.node_id))
                 continue
             
             self.waiting_pub.publish(Bool(data=False))

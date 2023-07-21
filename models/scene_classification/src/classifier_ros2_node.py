@@ -116,7 +116,6 @@ class ClassifierROS2Node(Node):
 
             rclpy.spin_once(self)
             self.get_time()
-            print(f'classifier node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # wait for next time step
@@ -124,13 +123,15 @@ class ClassifierROS2Node(Node):
 
             if self.waiting:
                 # wait for snapshot
-                self.finished_pub.publish(Bool(data=True))
+                self.node_time = self.central_time   
+                self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
-            
+            print('Classification node: ', self.central_time)
             # Run the classification model on the current snapshot and eye position
             class_probability, self.recurrent = self.classmodel.forward(self.snapshot, self.eye_pos, self.recurrent)
             class_probability = class_probability.detach().numpy()
+            print(class_probability)
             
             # Update the classification results
             self.update_classification_results(class_probability)

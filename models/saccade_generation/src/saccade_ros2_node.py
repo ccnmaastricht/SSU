@@ -77,12 +77,10 @@ class SaccadeROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-            print(f'saccade node - node time: {self.node_time}, central time: {self.central_time}')
-            
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
-
+            
             # Compute and publish the eye position
             desired_displacement = self.compute_displacement()
             input_current = self.compute_input_current(*desired_displacement)
@@ -90,8 +88,11 @@ class SaccadeROS2Node(Node):
             self.eye_pos_pub.publish(Float32MultiArray(data=self.saccade_generator.eye_position.tolist()))
             
             # Update the node time and publish that the node has finished
-            self.node_time = self.central_time        
+            
+            self.node_time = self.central_time
             self.finished_pub.publish(Int32(data=self.node_id))
+            
+                  
 
 if __name__ == '__main__':
     rclpy.init()

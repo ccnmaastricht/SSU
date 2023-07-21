@@ -65,7 +65,8 @@ class SelectionROS2Node(Node):
 
             if (self.waiting) or (self.saliency is None):
                 # Wait for snapshot
-                self.finished_pub.publish(Bool(data=True))
+                self.node_time = self.central_time   
+                self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
             # Compute and publish eye position

@@ -83,11 +83,9 @@ class SaliencyROS2Node(Node):
                 rclpy.shutdown()
                 break
 
-            print('saliency node - waiting for snapshot')
             rclpy.spin_once(self)
 
             self.get_time()
-            print(f'saliency node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
@@ -95,7 +93,8 @@ class SaliencyROS2Node(Node):
 
             if self.waiting:
                 # Wait for snapshot
-                self.finished_pub.publish(Bool(data=True))
+                self.node_time = self.central_time   
+                self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
             # Compute and publish the saliency map
