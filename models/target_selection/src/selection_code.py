@@ -18,12 +18,12 @@ class TargetSelection():
             saliency (np.ndarray): The saliency map
 
         Returns:
-            tuple of np.ndarray: The sampled locations
+            list: The sampled location in degrees
         '''
         
         sample = (np.random.random(saliency.shape) * saliency).flatten()
         index = np.argmax(sample)
         
-        return (index // self.pixels * self.degrees_per_pixel, index % self.pixels * self.degrees_per_pixel)
+        return [index // self.pixels * self.degrees_per_pixel, index % self.pixels * self.degrees_per_pixel]
     
     

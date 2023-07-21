@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32MultiArray
 
 import numpy as np
 from saccade_code import SaccadeGenerator
@@ -28,10 +28,10 @@ class SaccadeROS2Node(Node):
 
         # publishers
         self.finished_pub = self.create_publisher(Bool, '/finished', 10)
-        self.eye_pos_pub = self.create_publisher(Float32, '/eye_pos', 10)
+        self.eye_pos_pub = self.create_publisher(Float32MultiArray, '/eye_pos', 10)
 
         # subscribers
-        self.target_location_sub = self.create_subscription(Float32, '/selection_node/target_location', self.target_location_callback, 10)
+        self.target_location_sub = self.create_subscription(Float32MultiArray, '/selection_node/target_location', self.target_location_callback, 10)
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
 
         # start the loop
@@ -76,6 +76,7 @@ class SaccadeROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
+            print(f'saccade node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
@@ -85,7 +86,7 @@ class SaccadeROS2Node(Node):
             desired_displacement = self.compute_displacement()
             input_current = self.compute_input_current(*desired_displacement)
             self.saccade_generator.simulate(input_current)
-            self.eye_pos_pub.publish(Float32(data=self.saccade_generator.eye_position))
+            self.eye_pos_pub.publish(Float32MultiArray(data=self.saccade_generator.eye_position.tolist()))
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        

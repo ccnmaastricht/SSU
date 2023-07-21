@@ -28,18 +28,18 @@ class Camera:
         Set the eye position of the camera.
 
         Args:
-            eye_pos (np.ndarray): The eye position
+            eye_pos (list): The eye position
         '''
-        self.eye_pos = eye_pos
+        self.eye_pos = np.array(eye_pos)
 
     def set_target_location(self, target_location):
         '''
         Set the target location of the camera.
 
         Args:
-            target_location (np.ndarray): The target location
+            target_location (list): The target location
         '''
-        self.target_location = target_location
+        self.target_location = np.array(target_location)
 
     def compute_distance(self):
         '''
@@ -70,5 +70,5 @@ class Camera:
         y_min = np.clip(y - half_height, 0, self.scene_size[0] - self.snapshot_size[1])
         y_max = y_min + self.snapshot_size[1]
 
-        snapshot = self.scene[y_min:y_max, x_min:x_max]
+        snapshot = self.scene[y_min:y_max, x_min:x_max].astype('float32')
         return snapshot

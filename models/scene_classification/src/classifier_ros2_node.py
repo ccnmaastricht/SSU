@@ -4,7 +4,7 @@ import json
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from std_msgs.msg import Bool, Float32, String
+from std_msgs.msg import Bool, Float32MultiArray, String
 
 import torch
 
@@ -49,9 +49,9 @@ class ClassifierROS2Node(Node):
         self.finished_pub = self.create_publisher(Bool, '/finished', 10)
 
         # subscribers
-        self.snapshot_sub = self.create_subscription(Float32, '/camera_node/snapshot', self.snapshot_callback, 10)
+        self.snapshot_sub = self.create_subscription(Float32MultiArray, '/camera_node/snapshot', self.snapshot_callback, 10)
         self.waiting_sub = self.create_subscription(Bool, '/camera_node/waiting', self.waiting_callback, 10)
-        self.eye_pos_sub = self.create_subscription(Float32, '/saccade_node/eye_pos', self.eye_pos_callback, 10)
+        self.eye_pos_sub = self.create_subscription(Float32MultiArray, '/saccade_node/eye_pos', self.eye_pos_callback, 10)
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
         self.scene_sub = self.create_subscription(String, '/sync_node/scene', self.scene_callback, 10)
 
@@ -60,7 +60,12 @@ class ClassifierROS2Node(Node):
 
     # Callback functions
     def snapshot_callback(self, msg):
-        resampled = np.clip(self.sampler.resample_image(msg.data) / 127.5 - 1, -1, 1)
+        # Convert the data field to a NumPy array and reshape it to its original shape
+        snapshot = np.array(msg.data)
+        snapshot = snapshot.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size, msg.layout.dim[2].size))
+
+        # Resample the snapshot and pass it to the classification model
+        resampled = np.clip(self.sampler.resample_image(snapshot) / 127.5 - 1, -1, 1)
         self.set_snapshot(resampled)
 
     def waiting_callback(self, msg):
@@ -109,8 +114,8 @@ class ClassifierROS2Node(Node):
                 break
 
             rclpy.spin_once(self)
-
             self.get_time()
+            print(f'classifier node - node time: {self.node_time}, central time: {self.central_time}')
             
             if self.node_time>=self.central_time:
                 # wait for next time step
@@ -118,8 +123,10 @@ class ClassifierROS2Node(Node):
 
             if self.waiting:
                 # wait for snapshot
+                self.finished_pub.publish(Bool(data=True))
                 continue
 
+            
             # Run the classification model on the current snapshot and eye position
             class_probability, self.recurrent = self.classmodel.forward(self.snapshot, self.eye_pos, self.recurrent)
             class_probability = class_probability.detach().numpy()

@@ -129,7 +129,7 @@ class GanglionSampling:
         Resamples the image to the new resolution.
 
         Args:
-            image (array_like): Numpy array containing an image. Leaving it empty will call up a GUI to manually select a file.
+            image (list): The image to be resampled.
 
         Returns:
             array_like: Resampled image.

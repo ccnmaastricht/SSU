@@ -23,9 +23,8 @@ class Saliency:
         Set the input tensor to the model.
 
         Args:
-            image (np.ndarray): The image to be used as input to the model
+            image (list): The image to be used as input to the model.
         '''
-
         image = cv2.resize(image, (320, 320))[40:280, :, :].astype(np.float32)
         self.input_tensor = tf.convert_to_tensor(np.expand_dims(image, axis=0))
 
