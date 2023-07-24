@@ -28,3 +28,76 @@ In the SSU project, these steps are realized as follows:
 - **Communication through Message Broker**: The modules communicate with each other using ROS2 as the message broker.
 - **Time Synchronization with a Simulation Manager**: A dedicated `sync_node` serves as the Simulation Manager to keep all simulations in sync.
 - **Synchronization of Components**: Each module sends a message once it completes its calculations for an epoch, signaling the Simulation Manager to start a new epoch.
+
+## SSU Architecture
+
+1. **Camera Module**: This module simulates a virtual camera. It uses panorama images of different scenes to simulate the visual input that would be received by an eye. It provides a 360-degree view of each scene and can capture images based on the current eye position and target location. The module uses Docker to ensure that its dependencies are self-contained and that it can run in a variety of environments. It contains several Python scripts that provide the camera functionality and set up a ROS2 node for communication with other modules.
+
+2. **Saccade Generation Module**: This module simulates the biological process of saccades, which are rapid eye movements that quickly redirect the focus of the eye to a new position. The module uses the Nest library, a simulator for spiking neural network models, to construct and simulate a Saccade Generator. The module also includes a ROS2 node for communication with other modules. 
+
+3. **Saliency Module**: The purpose of the saliency module is to simulate the neural processes that highlight regions of an image that are likely to draw attention. It uses a TensorFlow-based saliency model to generate a saliency map from an input image. The module includes a ROS2 node for communication with other modules.
+
+4. **Scene Classification Module**: This module simulates the neural processes that recognize and classify different types of scenes based on visual input. It uses a neural network model for scene classification, taking an image as input and outputting a prediction of the scene class. The module includes a ROS2 node for communication with other modules.
+
+5. **Target Selection Module**: The purpose of this module is to select a target location in a scene based on a saliency map.
+
+6. **Sync Node**: This is the central node that synchronizes the operation of all other nodes. It manages the overall simulation, including advancing simulated time, handling scene data, and orchestrating the shutdown process when the simulation is complete.
+
+
+## Project Structure
+
+```
+├── build_containers.sh 
+├── docker-compose.yml 
+├── LICENSE 
+├── models 
+│   ├── camera 
+│   ├── saccade_generation 
+│   ├── saliency 
+│   ├── scene_classification 
+│   └── target_selection 
+├── README.md 
+└── sync_node 
+```
+
+### `build_containers.sh`
+
+A shell script that is used to build Docker containers for each node. 
+
+### `docker-compose.yml`
+
+A Docker Compose file that is used to manage and run the containers as a single, integrated service. 
+
+### `models`
+
+This directory contains the different modules (or "models") of the system, each implemented as a ROS2 node. Each model has its own Dockerfile, a requirements.txt file listing the Python dependencies, and a 'src' directory containing the source code.
+
+The 'src' directories typically contain a Python script defining a ROS2 node for the module, a Python script containing the core functionality of the module, and a shell script ('run.sh') for running the node in a Docker container. 
+
+The 'models' directory also contains sub-directories for data or additional resources needed by the modules, like neural network model files, images, parameter files, etc.
+
+### `sync_node`
+
+This directory contains files for the 'sync_node', a special ROS2 node that acts as the Simulation Manager for the entire system, ensuring that all modules are synchronized with respect to simulated time. 
+
+## Quick Start
+
+To get started with running the system:
+
+1. Ensure that Docker and Docker Compose are installed on your system.
+
+2. Clone the project repository.
+
+3. Use the `build_containers.sh` script to build the Docker images for all nodes. 
+
+```
+./build_containers.sh
+```
+
+4. Use Docker Compose to run the system:
+
+```
+docker-compose up
+```
+
+To stop the system, press `CTRL+C` in the terminal. This will stop all the running containers.
