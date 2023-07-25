@@ -94,7 +94,7 @@ class CameraROS2Node(Node):
             distance = self.camera.compute_distance()
             if (distance > 2.0) or (self.camera.scene is None):
                 self.waiting_pub.publish(Bool(data=True))
-                self.node_time = self.central_time   
+                self.node_time = self.central_time
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
             
