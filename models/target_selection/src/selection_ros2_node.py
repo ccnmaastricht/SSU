@@ -65,7 +65,7 @@ class SelectionROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-            
+
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
