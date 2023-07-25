@@ -59,9 +59,15 @@ class Saliency:
 
         return self.model(self.input_tensor)["output"].numpy().squeeze()
     
+    def update_global_saliency(self):
+        '''
+        Update the global saliency
+        '''
+        self.saliency_map *= np.exp(-self.time_step * self.decay_rate)
+    
     def compute_global_saliency(self):
         '''
-        Compute the global saliency of the snapshot.
+        Compute the global saliency.
 
         Returns:
             np.ndarray: The saliency map
@@ -78,8 +84,7 @@ class Saliency:
         y_min = np.clip(y - half_height, 0, self.scene_size[0] - self.snapshot_size[1])
         y_max = y_min + self.snapshot_size[1]
 
-        self.saliency_map *= np.exp(-self.time_step * self.decay_rate)
         local_saliency = self.compute_local_saliency()[:, 40:280]
         local_saliency = cv2.resize(local_saliency, self.snapshot_size, interpolation=cv2.INTER_CUBIC)
-        self.saliency_map[y_min:y_max, x_min:x_max] = local_saliency
+        self.saliency_map[y_min:y_max, x_min:x_max] += local_saliency
     
