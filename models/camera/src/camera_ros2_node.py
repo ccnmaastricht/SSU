@@ -92,17 +92,17 @@ class CameraROS2Node(Node):
 
             # Compute distance to target and publish waiting
             distance = self.camera.compute_distance()
-            if (distance > 1.0) or (self.camera.scene is None):
+            if (distance > 2.0) or (self.camera.scene is None):
                 self.waiting_pub.publish(Bool(data=True))
                 self.node_time = self.central_time   
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
             
-            self.waiting_pub.publish(Bool(data=False))
-            
             # Extract the current snapshot and publish it
             snapshot = self.camera.get_snapshot()
             self.publish_snapshot(snapshot)
+
+            self.waiting_pub.publish(Bool(data=False))
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
