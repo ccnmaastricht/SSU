@@ -48,6 +48,8 @@ class ClassifierROS2Node(Node):
         # classification results
         self.classification_results = {'office': [], 'conferenceRoom': [], 'hallway': [], 'auditorium': [], 'openspace': [],
                                        'lobby': [], 'lounge': [], 'pantry': [], 'copyRoom': [], 'storage': [], 'WC': []}
+        
+        self.fixation_results = {'x': [], 'y': []}
 
         # publishers
         self.finished_pub = self.create_publisher(Int32, '/finished', 10)
@@ -100,6 +102,10 @@ class ClassifierROS2Node(Node):
         for i, key in enumerate(self.classification_results):
             self.classification_results[key].append(class_probability[i])
 
+    def update_fixation_results(self):
+        self.fixation_results['x'].append(self.eye_pos.numpy()[0,0])
+        self.fixation_results['y'].append(self.eye_pos.numpy()[0,1])
+
     def save_classification_results(self):
         path = os.path.join('/usr/results', self.scene)
         if not os.path.exists(path):
@@ -109,12 +115,22 @@ class ClassifierROS2Node(Node):
         df = pd.DataFrame(self.classification_results)
         df.to_csv(file, index=False)
 
+    def save_fixation_results(self):
+        path = os.path.join('/usr/results', self.scene)
+        if not os.path.exists(path):
+            os.makedirs(path)
+            
+        file = os.path.join(path, 'fixation_results.csv')
+        df = pd.DataFrame(self.fixation_results)
+        df.to_csv(file, index=False)
+
     # Main loop
     def classification_loop(self):
         while rclpy.ok():
             if self.shut_down:
                 # save classification results and shut down
                 self.save_classification_results()
+                self.save_fixation_results()
                 rclpy.shutdown()
                 break
 
@@ -135,6 +151,9 @@ class ClassifierROS2Node(Node):
             log_softmax, self.recurrent = self.classmodel(self.snapshot, self.eye_pos, self.recurrent)
             log_softmax = log_softmax.detach().numpy()[0]
             class_probability = np.exp(log_softmax) 
+
+            # Update the fixation results
+            self.update_fixation_results()
         
             # Update the classification results
             self.update_classification_results(class_probability)
