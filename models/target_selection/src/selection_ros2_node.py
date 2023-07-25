@@ -30,6 +30,7 @@ class SelectionROS2Node(Node):
         self.target_pub = self.create_publisher(Float32MultiArray, '/selection_node/target_location', 10)
 
         # subscribers
+        self.waiting_sub = self.create_subscription(Bool, '/camera_node/waiting', self.waiting_callback, 10)
         self.saliency_sub = self.create_subscription(Float32MultiArray, '/saliency_node/saliency', self.saliency_callback, 10)
         self.shut_down_sub = self.create_subscription(Bool, '/sync_node/shutdown', self.shutdown_callback, 10)
 
@@ -37,6 +38,9 @@ class SelectionROS2Node(Node):
         self.selection_loop()
 
     # Callback functions
+    def waiting_callback(self, msg):
+        self.waiting = msg.data
+
     def saliency_callback(self, msg):
         saliency = np.array(msg.data)
         self.saliency = saliency.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size))
@@ -61,13 +65,10 @@ class SelectionROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-
-            
             
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
-            
             
             if (self.waiting) or (self.saliency is None):
                 # Wait for snapshot
