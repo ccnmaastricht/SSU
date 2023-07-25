@@ -60,7 +60,7 @@ class SaliencyROS2Node(Node):
         snapshot = snapshot.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size, msg.layout.dim[2].size))
         
         # Set the input tensor of the saliency model
-        #self.salmodel.set_input_tensor(snapshot)
+        self.salmodel.set_input_tensor(snapshot)
 
     def waiting_callback(self, msg):
         self.waiting = msg.data
@@ -94,13 +94,16 @@ class SaliencyROS2Node(Node):
 
             if self.waiting:
                 # Wait for snapshot
-                self.node_time = self.central_time   
+                self.node_time = self.central_time
+                self.salmodel.update_global_saliency()
                 self.finished_pub.publish(Int32(data=self.node_id))
                 continue
 
             # Compute the saliency map
+            self.salmodel.update_global_saliency()
             sal_map = self.salmodel.get_saliency_map()
             self.publish_salience(sal_map)
+
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
