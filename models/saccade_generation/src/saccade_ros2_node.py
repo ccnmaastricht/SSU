@@ -24,7 +24,7 @@ class SaccadeROS2Node(Node):
         self.target_location = np.zeros(2)
 
         self.horizontal_factor = 5.0
-        self.vertical_factor = 2.5
+        self.vertical_factor = 5.0
         self.min_current = 300.0
 
         # publishers
@@ -87,7 +87,6 @@ class SaccadeROS2Node(Node):
             input_current = self.compute_input_current(*desired_displacement)
             self.saccade_generator.simulate(input_current)
             self.eye_pos_pub.publish(Float32MultiArray(data=self.saccade_generator.eye_position.tolist()))
-            
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time
