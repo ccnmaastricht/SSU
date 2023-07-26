@@ -55,7 +55,7 @@ class SelectionROS2Node(Node):
 
     # Main loop
     def selection_loop(self):
-        target_location = np.zeros(2)
+        target_location = [0, 0]
         while rclpy.ok():
             if self.shut_down:
                 # Shutdown the node
@@ -65,7 +65,6 @@ class SelectionROS2Node(Node):
             rclpy.spin_once(self)
 
             self.get_time()
-
             if self.node_time>=self.central_time:
                 # Wait for the next time step
                 continue
