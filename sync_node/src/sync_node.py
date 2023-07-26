@@ -9,6 +9,9 @@ from rosgraph_msgs.msg import Clock
 
 class SyncROSNode(Node):
     def __init__(self):
+        '''
+        Initialize the SyncROSNode.
+        '''
         super().__init__('sync_node')
 
         self.finished_count = 0
@@ -32,6 +35,9 @@ class SyncROSNode(Node):
         
  
     def publish_time(self):
+        '''
+        Publish the current time to the '/clock' topic.
+        '''
         seconds = int(self.current_time)
         nanoseconds = int((self.current_time - seconds) * 1e9)
         msg = Clock()
@@ -39,6 +45,12 @@ class SyncROSNode(Node):
         self.time_pub.publish(msg)
 
     def finished_callback(self, msg):
+        '''
+        Callback function for the '/finished' topic.
+
+        Args:
+            msg (Int32): ID of node that finished.
+        '''
         if msg.data not in self.finished_nodes:
             self.finished_nodes.add(msg.data)
             self.finished_count += 1
@@ -48,14 +60,26 @@ class SyncROSNode(Node):
             self.finished_count = 0
         
 
-    def advance_time(self): ## make sure that sarting and finishing works properly across nodes
+    def advance_time(self):
+        '''
+        Advance the current time by the time step.
+        '''
         self.current_time += self.time_step
    
     def shutdown(self):
+        '''
+        Shutdown the simulation.
+        '''
         self.shut_down_pub.publish(Bool(data=True))
         rclpy.shutdown()
 
     def load_config(self, config_file):
+        '''
+        Load the simulation configuration file.
+
+        Args:
+            config_file (str): Path to the configuration file.
+        '''
         with open(config_file) as f:
             config = json.load(f)
         self.num_nodes = config['num_nodes']
@@ -65,6 +89,9 @@ class SyncROSNode(Node):
         self.current_time = self.time_step
 
     def run_simulation(self):
+        '''
+        Run the simulation.
+        '''
         while self.current_time<self.viewing_time:
             self.scene_pub.publish(String(data=self.scene))
             self.publish_time()

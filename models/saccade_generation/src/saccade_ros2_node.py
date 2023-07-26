@@ -8,6 +8,11 @@ from saccade_code import SaccadeGenerator
 
 class SaccadeROS2Node(Node):
     def __init__(self):
+        '''
+        Initialize the SaccadeROS2Node.
+
+        Creates publishers and subscribers, initializes variables, and starts the main loop.
+        '''
         super().__init__('saccade_node')
         
         # Set the 'use_sim_time' parameter to True
@@ -40,16 +45,38 @@ class SaccadeROS2Node(Node):
 
     # Callback functions
     def target_location_callback(self, msg):
+        '''
+        Callback function for the '/selection_node/target_location' topic.
+
+        Args:
+            msg (Float32MultiArray): The target location
+        '''
         self.target_location = msg.data
 
     def shutdown_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/shutdown' topic.
+
+        Args:
+            msg (Bool): The shutdown message
+        '''
         self.shut_down = msg.data
 
     # Helper functions
     def get_time(self):
+        '''
+        Get the current time in seconds.
+        '''
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
     def compute_displacement(self):
+        '''
+        Compute the desired displacement of the eye.
+
+        Returns:
+            horizontal_displacement (float): The desired horizontal displacement of the eye
+            vertical_displacement (float): The desired vertical displacement of the eye
+        '''
         horizontal = self.saccade_generator.eye_position[0]
         vertical = self.saccade_generator.eye_position[1]
         horizontal_displacement = self.target_location[0] - horizontal
@@ -58,6 +85,19 @@ class SaccadeROS2Node(Node):
         return horizontal_displacement, vertical_displacement
     
     def compute_input_current(self, horizontal_displacement, vertical_displacement):
+        '''
+        Compute the input current to the saccade generator.
+
+        Args:
+            horizontal_displacement (float): The desired horizontal displacement of the eye
+            vertical_displacement (float): The desired vertical displacement of the eye
+
+        Returns:
+            current_left (float): The input current to the left muscle
+            current_right (float): The input current to the right muscle
+            current_up (float): The input current to the up muscle
+            current_down (float): The input current to the down muscle
+        '''
         current_left = -np.minimum(horizontal_displacement, 0.) * self.horizontal_factor + self.min_current
         current_right = np.maximum(horizontal_displacement, 0.) * self.horizontal_factor + self.min_current
         current_up = np.maximum(vertical_displacement, 0.) * self.vertical_factor + self.min_current
@@ -68,6 +108,14 @@ class SaccadeROS2Node(Node):
 
     # Main loop
     def saccade_loop(self):
+        '''
+        The main loop of the SaccadeROS2Node.
+
+        It waits for the node to receive a target location from the SelectionROS2Node, then computes the desired displacement and input current. 
+        It then simulates the saccade generator and publishes the eye position.
+        '''
+
+
         while rclpy.ok():
             if self.shut_down:
                 # Shutdown the node

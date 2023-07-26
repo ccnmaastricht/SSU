@@ -8,6 +8,9 @@ import numpy as np
 from selection_code import TargetSelection
 
 class SelectionROS2Node(Node):
+    '''
+    ROS2 node for the target selection model.
+    '''
     def __init__(self):
         super().__init__('selection_node')
         
@@ -39,22 +42,48 @@ class SelectionROS2Node(Node):
 
     # Callback functions
     def waiting_callback(self, msg):
+        '''
+        Callback function for the '/camera_node/waiting' topic.
+
+        Args:
+            msg (Bool): Whether the camera node is waiting to generate a snapshot.
+        '''
         self.waiting = msg.data
 
     def saliency_callback(self, msg):
+        '''
+        Callback function for the '/saliency_node/saliency' topic.
+
+        Args:
+            msg (Float32MultiArray): The saliency map
+        '''
         saliency = np.array(msg.data)
         self.saliency = saliency.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size))
             
         
     def shutdown_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/shutdown' topic.
+
+        Args:
+            msg (Bool): Whether to shut down the node
+        '''
         self.shut_down = msg.data
 
     # Helper functions
     def get_time(self):
+        '''
+        Get the current time in seconds.
+        '''
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
     # Main loop
     def selection_loop(self):
+        '''
+        The main loop of the SelectionROS2Node.
+
+        The node waits for the saliency map and then computes the target location.
+        '''
         target_location = [0, 0]
         while rclpy.ok():
             if self.shut_down:

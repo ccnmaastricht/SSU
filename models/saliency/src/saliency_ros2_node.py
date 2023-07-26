@@ -9,6 +9,11 @@ from saliency_code import Saliency
 
 class SaliencyROS2Node(Node):
     def __init__(self):
+        '''
+        Initialize the SaliencyROS2Node.
+
+        Creates publishers and subscribers, initializes variables, and starts the main loop.
+        '''
         super().__init__('saliency_node')
         
         # Set the 'use_sim_time' parameter to True
@@ -40,6 +45,12 @@ class SaliencyROS2Node(Node):
         self.saliency_loop()
     
     def publish_salience(self, sal_map):
+        '''
+        Publish the saliency map to the '/saliency_node/saliency' topic.
+
+        Args:
+            sal_map (np.ndarray): The saliency map to publish
+        '''
         msg = Float32MultiArray()
         msg.layout.dim.append(MultiArrayDimension())
         msg.layout.dim.append(MultiArrayDimension())
@@ -55,6 +66,12 @@ class SaliencyROS2Node(Node):
 
     # Callback functions
     def snapshot_callback(self, msg):
+        '''
+        Callback function for the '/camera_node/snapshot' topic.
+
+        Args:
+            msg (Float32MultiArray): The snapshot
+        '''
         # Convert the data field to a NumPy array and reshape it to its original shape
         snapshot = np.array(msg.data)
         snapshot = snapshot.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size, msg.layout.dim[2].size))
@@ -63,20 +80,44 @@ class SaliencyROS2Node(Node):
         self.salmodel.set_input_tensor(snapshot)
 
     def waiting_callback(self, msg):
+        '''
+        Callback function for the '/camera_node/waiting' topic.
+
+        Args:
+            msg (Bool): Whether the camera node is waiting to generate a snapshot.
+        '''
         self.waiting = msg.data
         
     def eye_pos_callback(self, msg):
+        '''
+        Callback function for the '/saccade_node/eye_pos' topic.
+
+        Args:
+            msg (Float32MultiArray): The eye position
+        '''
         self.salmodel.set_eye_pos(msg.data)
 
     def shutdown_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/shutdown' topic. 
+
+        Args:
+            msg (Bool): Whether to shut down the node
+        '''
         self.shut_down = msg.data
 
     # Helper functions
     def get_time(self):
+        '''
+        Get the current time in seconds.
+        '''
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
     # Main loop
     def saliency_loop(self):
+        '''
+        The main loop of the SaliencyROS2Node.
+        '''
         sal_map = np.zeros((2048, 4096))
         while rclpy.ok():
             if self.shut_down:

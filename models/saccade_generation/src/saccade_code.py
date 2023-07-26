@@ -5,6 +5,9 @@ import numpy as np
 
 class SaccadeGenerator():
     def __init__(self):
+        '''
+        Initialize the SaccadeGenerator.
+        '''
         
         with open('parameters/population_parameters.json') as f:
             self.population_parameters = json.load(f)
@@ -22,7 +25,9 @@ class SaccadeGenerator():
         
 
     def constructor(self):
-
+        '''
+        Construct spiking neural network model of saccade generator
+        '''
         nest.ResetKernel()
         nest.set_verbosity("M_WARNING")
         saccade_generator = self.construct_saccade_generator()
@@ -49,10 +54,19 @@ class SaccadeGenerator():
 
         
     def reset(self):
+        '''
+        Reset the SaccadeGenerator.
+        '''
         self.eye_position = np.zeros(2) # reset eye position
 
 
     def simulate(self, amplitude):
+        '''
+        Simulate the SaccadeGenerator.
+
+        Args:
+            amplitude (tuple): The amplitude of the saccade
+        '''
         amplitude_left, amplitude_right, amplitude_up, amplitude_down = amplitude
 
         self.constructor()
@@ -85,6 +99,9 @@ class SaccadeGenerator():
         
 
     def construct_dc_generators(self):
+        '''
+        Construct dc generators for LLBNs
+        '''
         self.dc_generator_left = nest.Create('dc_generator', 1)
         self.dc_generator_right = nest.Create('dc_generator', 1)
         self.dc_generator_up = nest.Create('dc_generator', 1)
@@ -114,6 +131,9 @@ class SaccadeGenerator():
 
     
     def construct_recording_devices(self):
+        '''
+        Construct spike detectors for EBNs
+        '''
         self.spike_detector_right = nest.Create('spike_detector', 1)
         self.spike_detector_left = nest.Create('spike_detector', 1)
         self.spike_detector_up = nest.Create('spike_detector', 1)

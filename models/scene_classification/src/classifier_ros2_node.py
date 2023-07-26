@@ -15,6 +15,11 @@ from retinal_sampling.sampling_code import GanglionSampling
 
 class ClassifierROS2Node(Node):
     def __init__(self):
+        '''
+        Initialize the ClassifierROS2Node.
+
+        Creates publishers and subscribers, initializes variables, and starts the main loop.
+        '''
         super().__init__('classifier_node')
         
         # Set the 'use_sim_time' parameter to True
@@ -66,6 +71,12 @@ class ClassifierROS2Node(Node):
 
     # Callback functions
     def snapshot_callback(self, msg):
+        '''
+        Callback function for the '/camera_node/snapshot' topic.
+
+        Args:
+            msg (Float32MultiArray): The snapshot
+        '''
         # Convert the data field to a NumPy array and reshape it to its original shape
         snapshot = np.array(msg.data)
         snapshot = snapshot.reshape((msg.layout.dim[0].size, msg.layout.dim[1].size, msg.layout.dim[2].size))
@@ -75,38 +86,89 @@ class ClassifierROS2Node(Node):
         self.set_snapshot(resampled)
 
     def waiting_callback(self, msg):
+        '''
+        Callback function for the '/camera_node/waiting' topic.
+
+        Args:
+            msg (Bool): Whether the camera node is waiting to generate a snapshot.
+        '''
         self.waiting = msg.data
 
     def eye_pos_callback(self, msg):
+        '''
+        Callback function for the '/saccade_node/eye_pos' topic.
+
+        Args:
+            msg (Float32MultiArray): The eye position
+        '''
         self.set_eye_pos(msg.data)
 
     def shutdown_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/shutdown' topic.
+
+        Args:
+            msg (Bool): Whether to shut down the node.
+        '''
         self.shut_down = msg.data
 
     def scene_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/scene' topic.
+
+        Args:
+            msg (String): The current scene
+        '''
         self.scene = msg.data
 
     # Helper functions
     def get_time(self):
+        '''
+        Get the current time in seconds.
+        '''
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
     def set_snapshot(self,snapshot):
+        '''
+        Set the snapshot of the model.
+
+        Args:
+            snapshot (np.ndarray): The snapshot
+        '''
         if not np.isscalar(snapshot):
             self.snapshot = torch.unsqueeze(torch.from_numpy(np.array(snapshot)).permute(2, 0, 1).float().to(self.device),0)
             
     
     def set_eye_pos(self,eye_pos):
+        '''
+        Set the eye position of the model.
+
+        Args:
+            eye_pos (list): The eye position
+        '''
         self.eye_pos = torch.unsqueeze(torch.from_numpy(np.array(eye_pos)).float().to(self.device),0)
 
     def update_classification_results(self, class_probability):
+        '''
+        Update the classification results.
+
+        Args:
+            class_probability (np.ndarray): The class probabilities
+        '''
         for i, key in enumerate(self.classification_results):
             self.classification_results[key].append(class_probability[i])
 
     def update_fixation_results(self):
+        '''
+        Update the fixation results.
+        '''
         self.fixation_results['x'].append(self.eye_pos.numpy()[0,0])
         self.fixation_results['y'].append(self.eye_pos.numpy()[0,1])
 
     def save_classification_results(self):
+        '''
+        Save the classification results to a CSV file.
+        '''
         path = os.path.join('/usr/results', self.scene)
         if not os.path.exists(path):
             os.makedirs(path)
@@ -116,6 +178,9 @@ class ClassifierROS2Node(Node):
         df.to_csv(file, index=False)
 
     def save_fixation_results(self):
+        '''
+        Save the fixation results to a CSV file.
+        '''
         path = os.path.join('/usr/results', self.scene)
         if not os.path.exists(path):
             os.makedirs(path)
@@ -126,6 +191,11 @@ class ClassifierROS2Node(Node):
 
     # Main loop
     def classification_loop(self):
+        '''
+        The main loop of the ClassifierROS2Node.
+
+        Runs the classification model on the current snapshot and eye position and publishes the results.
+        '''
         while rclpy.ok():
             if self.shut_down:
                 # save classification results and shut down

@@ -4,6 +4,10 @@ import torch.nn as nn
 
 class SceneClassificationModel(nn.Module):
     def __init__(self, parameters):
+        '''Initializes the model
+        Args:
+            parameters (dict): The model parameters
+        '''
         super(SceneClassificationModel, self).__init__()
 
         self.num_recurrent = parameters['num_recurrent']
