@@ -103,7 +103,6 @@ class SaliencyROS2Node(Node):
             self.salmodel.update_global_saliency()
             sal_map = self.salmodel.get_saliency_map()
             self.publish_salience(sal_map)
-
             
             # Update the node time and publish that the node has finished
             self.node_time = self.central_time        
