@@ -77,8 +77,8 @@ class SaccadeGenerator():
         rate_down = len(spike_times_down) / self.simulation_time
 
         # compute eye position
-        horizontal_displacement = (rate_right - rate_left) / 22.38 * 180.
-        vertical_displacement = rate_up - rate_down / 22.38 * 90.
+        horizontal_displacement = (rate_right - rate_left) / 22.38 * 180.0
+        vertical_displacement = (rate_up - rate_down) / 22.38 * 90.0
 
         self.eye_position[0] += horizontal_displacement
         self.eye_position[1] += vertical_displacement
