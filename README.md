@@ -1,4 +1,8 @@
 # SSU Project
+![](https://img.shields.io/github/license/ccnmaastricht/SSU)
+![](https://img.shields.io/github/issues/ccnmaastricht/SSU)
+![](https://img.shields.io/github/forks/ccnmaastricht/SSU)
+![](https://img.shields.io/github/stars/ccnmaastricht/SSU)
 
 Welcome to the Scene Understanding with Saccades (SSU) project. This is a tech demo that showcases the power and versatility of the modular-integrative modeling approach. 
 
