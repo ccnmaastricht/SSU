@@ -21,7 +21,7 @@ class SaccadeROS2Node(Node):
         self.node_id = 2
 
         self.saccade_generator = SaccadeGenerator()
-        self.target_location = np.zeros(2)
+        self.target_location = [0, 0]
 
         self.horizontal_factor = 5.0
         self.vertical_factor = 5.0
@@ -59,11 +59,11 @@ class SaccadeROS2Node(Node):
     
     def compute_input_current(self, horizontal_displacement, vertical_displacement):
         current_left = -np.minimum(horizontal_displacement, 0.) * self.horizontal_factor + self.min_current
-        amp_right = np.maximum(horizontal_displacement, 0.) * self.horizontal_factor + self.min_current
-        amp_up = np.maximum(vertical_displacement, 0.) * self.vertical_factor + self.min_current
-        amp_down = -np.minimum(vertical_displacement, 0.) * self.vertical_factor + self.min_current
+        current_right = np.maximum(horizontal_displacement, 0.) * self.horizontal_factor + self.min_current
+        current_up = np.maximum(vertical_displacement, 0.) * self.vertical_factor + self.min_current
+        current_down = -np.minimum(vertical_displacement, 0.) * self.vertical_factor + self.min_current
 
-        return (current_left, amp_right, amp_up, amp_down)
+        return (current_left, current_right, current_up, current_down)
 
 
     # Main loop
@@ -86,6 +86,7 @@ class SaccadeROS2Node(Node):
             desired_displacement = self.compute_displacement()
             input_current = self.compute_input_current(*desired_displacement)
             self.saccade_generator.simulate(input_current)
+            
             self.eye_pos_pub.publish(Float32MultiArray(data=self.saccade_generator.eye_position.tolist()))
             
             # Update the node time and publish that the node has finished
