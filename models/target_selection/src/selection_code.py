@@ -24,8 +24,8 @@ class TargetSelection():
         sample = (np.random.random(saliency.shape) * saliency).flatten()
         index = np.argmax(sample)
 
-        horizontal = index // self.pixels * self.degrees_per_pixel - 90
-        vertical = index % self.pixels * self.degrees_per_pixel - 180
+        vertical = index // self.pixels * self.degrees_per_pixel - 90
+        horizontal = index % self.pixels * self.degrees_per_pixel - 180
         
         return [horizontal, vertical]
     
