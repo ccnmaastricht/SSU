@@ -8,6 +8,11 @@ from camera_code import Camera
 
 class CameraROS2Node(Node):
     def __init__(self):
+        '''
+        Initialize the CameraROS2Node.
+
+        Creates publishers and subscribers, initializes variables, and starts the main loop.
+        '''
         super().__init__('camera_node')
         
         # Set the 'use_sim_time' parameter to True
@@ -37,6 +42,12 @@ class CameraROS2Node(Node):
         self.camera_loop()
 
     def publish_snapshot(self, snapshot):
+        '''
+        Publish a snapshot to the '/camera_node/snapshot' topic.
+
+        Args:
+            snapshot (np.ndarray): The snapshot to publish
+        '''
         msg = Float32MultiArray()
         msg.layout.dim.append(MultiArrayDimension())
         msg.layout.dim.append(MultiArrayDimension())
@@ -56,25 +67,57 @@ class CameraROS2Node(Node):
 
     # Callback functions
     def shutdown_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/shutdown' topic.
+
+        Args:
+            msg (std_msgs.msg.Bool): The message received on the topic
+        '''
         self.shut_down = msg.data
 
     def scene_callback(self, msg):
+        '''
+        Callback function for the '/sync_node/scene' topic.
+
+        Args:
+            msg (std_msgs.msg.String): The message received on the topic
+        '''
         file = os.path.join("/usr/data", msg.data, "image.png")
         self.camera.set_scene(file)
 
     def target_location_callback(self, msg):
+        '''
+        Callback function for the '/selection_node/target_location' topic.
+
+        Args:
+            msg (std_msgs.msg.Float32MultiArray): The message received on the topic
+        '''
         self.camera.set_target_location(msg.data)
 
     def eye_pos_callback(self, msg):
+        '''
+        Callback function for the '/saccade_node/eye_pos' topic.
+
+        Args:
+            msg (std_msgs.msg.Float32MultiArray): The message received on the topic
+        '''
         self.camera.set_eye_pos(msg.data)
 
 
     # Helper functions
     def get_time(self):
+        '''
+        Get the current time in seconds.
+        '''
         self.central_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9
 
     # Main loop
     def camera_loop(self):
+        '''
+        The main loop of the CameraROS2Node.
+
+        Computes the distance to the target, extracts the current snapshot, and publishes it.
+        '''
         snapshot = np.zeros((1024, 1024, 3))
         while rclpy.ok():
             if self.shut_down:
