@@ -4,7 +4,7 @@
 ![](https://img.shields.io/github/forks/ccnmaastricht/SSU)
 ![](https://img.shields.io/github/stars/ccnmaastricht/SSU)
 
-Welcome to the Scene Understanding with Saccades (SSU) project. This is a tech demo that showcases the power and versatility of the modular-integrative modeling approach. 
+Welcome to the Saccades for Scene Understanding (SSU) project. This is a tech demo that showcases the power and versatility of the modular-integrative modeling approach. 
 
 ## Introduction
 With an increasing need for complex modeling and simulations in neuroscience, it is essential to have an approach that allows for flexibility, scalability, and efficient management. The modular-integrative modeling approach (advanced by work package 3 of the Human Brain Project's 3rd Specific Grant Agreement) meets these needs by dividing the entire model into smaller, manageable modules. This allows for components to be developed independently, and then integrated and synchronized to simulate the complete system. 
@@ -45,23 +45,45 @@ In the SSU project, these steps are realized as follows:
 
 5. **Target Selection Module**: The purpose of this module is to select a target location in a scene based on a saliency map.
 
-6. **Sync Node**: This is the central node that synchronizes the operation of all other nodes. It manages the overall simulation, including advancing simulated time, handling scene data, and orchestrating the shutdown process when the simulation is complete.
+6. **Sync Node**: This is the central node that synchronizes the operation of all other nodes. It manages the overall simulation, including advancing simulated time and orchestrating the shutdown process when the simulation is complete.
 
 
 ## Project Structure
 
 ```
-├── build_containers.sh 
-├── docker-compose.yml 
-├── LICENSE 
-├── models 
-│   ├── camera 
-│   ├── saccade_generation 
-│   ├── saliency 
-│   ├── scene_classification 
-│   └── target_selection 
-├── README.md 
-└── sync_node 
+.
+├── build_containers.sh
+├── config
+│   └── simulation_configuration.json
+├── docker-compose.yml
+├── models
+│   ├── camera
+│   │   ├── data
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── src
+│   ├── saccade_generation
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── src
+│   ├── saliency
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── src
+│   ├── scene_classification
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── src
+│   └── target_selection
+│       ├── Dockerfile
+│       ├── requirements.txt
+│       └── src
+├── results
+└── sync_node
+    ├── Dockerfile
+    └── src
+        ├── run.sh
+        └── sync_node.py
 ```
 
 ### `build_containers.sh`
