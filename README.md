@@ -22,16 +22,16 @@ The modular-integrative modeling approach involves several steps:
 1. **Component Modularization**: The system is broken down into smaller components or modules, each of which can be developed independently.
 2. **Containerization**: Each module is containerized using technologies like Docker, to avoid dependency conflicts and ensure isolated environments.
 3. **Communication through Message Broker**: Modules exchange data via a message broker using a publish-subscribe pattern.
-4. **Time Synchronization with a Simulation Manager**: The Simulation Manager ensures that all modules are in sync, particularly in terms of simulated time.
-5. **Synchronization of Components**: Each module signals when it is done with its calculations for the current time slot, and the Simulation Manager starts a new one once all modules are ready.
+4. **Time Synchronization with a Simulation Coordinator**: The Simulation Coordinator ensures that all modules are in sync, particularly in terms of simulated time.
+5. **Synchronization of Components**: Each module signals when it is done with its calculations for the current time slot, and the Simulation Coordinator starts a new one once all modules are ready.
 
 In the SSU project, these steps are realized as follows:
 
 - **Component Modularization**: The system is divided into various modules such as scene classification, saliency computation, saccade generation, etc.
 - **Containerization**: Each of these modules is containerized using Docker.
 - **Communication through Message Broker**: The modules communicate with each other using ROS2 as the message broker.
-- **Time Synchronization with a Simulation Manager**: A dedicated `sync_node` serves as the Simulation Manager to keep all simulations in sync.
-- **Synchronization of Components**: Each module sends a message once it completes its calculations for an epoch, signaling the Simulation Manager to start a new epoch.
+- **Time Synchronization with a Simulation Coordinator**: A dedicated `sync_node` serves as the Simulation Coordinator to keep all simulations in sync.
+- **Synchronization of Components**: Each module sends a message once it completes its calculations for a cycle, signaling the Simulation Coordinator to start a new cycle.
 
 ## SSU Architecture
 
@@ -104,7 +104,7 @@ The 'models' directory also contains sub-directories for data or additional reso
 
 ### `sync_node`
 
-This directory contains files for the 'sync_node', a special ROS2 node that acts as the Simulation Manager for the entire system, ensuring that all modules are synchronized with respect to simulated time. 
+This directory contains files for the 'sync_node', a special ROS2 node that acts as the Simulation Coordinator for the entire system, ensuring that all modules are synchronized with respect to simulated time. 
 
 ## Quick Start
 
