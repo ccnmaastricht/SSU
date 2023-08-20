@@ -106,6 +106,30 @@ The 'models' directory also contains sub-directories for data or additional reso
 
 This directory contains files for the 'sync_node', a special ROS2 node that acts as the Simulation Coordinator for the entire system, ensuring that all modules are synchronized with respect to simulated time. 
 
+## Dataset Requirement
+
+To successfully run the SSU system, the following requirements must be met:
+
+- **2D-3D-S Dataset**: You must obtain at least one RGB image from each scene class from the [2D-3D-S dataset](https://github.com/alexsax/2D-3D-Semantics). 
+- **Directory Structure**: An image must be placed within `./models/camera/data/CLASS_NAME` folder and named `image.png`.
+
+The 11 classes are:
+- 'hallway'
+- 'lounge'
+- 'storage'
+- 'copyRoom'
+- 'openspace'
+- 'auditorium'
+- 'pantry'
+- 'conferenceRoom'
+- 'office'
+- 'lobby'
+- 'WC'
+
+## Additional Information
+
+The 2D-3D-S dataset was also utilized to train the scene classifier model. A csv file, `LABEL_holdout.csv`, contains the path and filename of all images that were not used during training. This list is available in the `./models/camera/data` folder.
+
 ## Quick Start
 
 To get started with running the system:
@@ -114,13 +138,17 @@ To get started with running the system:
 
 2. Clone the project repository.
 
-3. Use the `build_containers.sh` script to build the Docker images for all nodes. 
+3. Provide the scene (class) you would like the system to explore in the `simulation_configuration.json` file within the `./config` folder.
+
+4. Place an image named `image.png` of that scene (class) in the `./models/camera/data/CLASS_NAME` folder.
+
+5. Use the `build_containers.sh` script to build the Docker images for all nodes. 
 
 ```
 ./build_containers.sh
 ```
 
-4. Use Docker Compose to run the system:
+6. Use Docker Compose to run the system:
 
 ```
 docker-compose up
