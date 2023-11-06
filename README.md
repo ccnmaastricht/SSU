@@ -159,7 +159,13 @@ To stop the system, press `CTRL+C` in the terminal. This will stop all the runni
 
 ## Contributors
  
-The SSU architecture was implemented by Mario Senden<sup>a, b</sup>. The Saccade Generation module is based on a [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator) written by Anno Kurth<sup>c, d, e</sup> with support from Sacha van Albada<sup>c, d, e, f</sup>. The spiking neural network model is itself inspired by work of Gancarz and Grossberg [1]. The Saliency module utilizes the [contextual encoder-decoder network for visual saliency prediction](https://github.com/alexanderkroner/saliency) developed by Alexander Kroner<sup>a, b</sup> [2]. The Scene Classification module utilizes a retinal sampling procedure written by Danny da Costa<sup>a, b</sup> [3].  
+The SSU architecture was implemented by Mario Senden<sup>a, b</sup>. 
+
+The Saccade Generation module is based on a [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator) written by Anno Kurth<sup>c, d, e</sup> with support from Sacha van Albada<sup>c, d, e, f</sup>. The spiking neural network model is itself inspired by work of Gancarz and Grossberg [1]. 
+
+The Saliency module utilizes the [contextual encoder-decoder network for visual saliency prediction](https://github.com/alexanderkroner/saliency) developed by Alexander Kroner<sup>a, b</sup> [2]. 
+
+The Scene Classification module utilizes a retinal sampling procedure written by Danny da Costa<sup>a, b</sup> [3].  
 
 **a)** Department of Cognitive Neuroscience, Faculty of Psychology and Neuroscience, Maastricht University, Maastricht, The Netherlands
 
@@ -172,6 +178,13 @@ The SSU architecture was implemented by Mario Senden<sup>a, b</sup>. The Saccade
 **e)** ARA-Institute Brain Structure-Function Relationships (INM-10), Jülich Research Centre, 	Jülich, Germany
 
 **f)** Institute of Zoology, Faculty of Mathematics and Natural Sciences, University of Cologne, Cologne, Germany
+
+## License
+
+This repository contains a mix of open-source code under two different licenses:
+
+- **MIT License** With the exception of the Saccade Generation Module, this project is under the MIT license. A copy of the MIT license can be found in the LICENSE file.
+- **CC BY-NC-SA 4.0 License**: The Saccade Generation Module is based on the [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator) written by Anno Kurth with support from Sacha van Albada and is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (CC BY-NC-SA 4.0). The full text of the CC BY-NC-SA 4.0 License can be found in the [CC_BY_NC_SA_LICENSE.md](./CC_BY_NC_SA_LICENSE.md) file.
 
 ## References
 [1] Gancarz, Gregory, and Stephen Grossberg. "A neural model of the saccade generator in the reticular formation." Neural Networks 11.7-8 (1998): 1159-1174. 
