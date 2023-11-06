@@ -37,7 +37,7 @@ In the SSU project, these steps are realized as follows:
 
 1. **Camera Module**: This module simulates a virtual camera. It uses panorama images of different scenes to simulate the visual input that would be received by an eye. It provides a 360-degree view of each scene and can capture images based on the current eye position and target location. The module uses Docker to ensure that its dependencies are self-contained and that it can run in a variety of environments. It contains several Python scripts that provide the camera functionality and set up a ROS2 node for communication with other modules.
 
-2. **Saccade Generation Module**: This module simulates the biological process of saccades, which are rapid eye movements that quickly redirect the focus of the eye to a new position. The module uses the Nest library, a simulator for spiking neural network models, to construct and simulate a Saccade Generator. The module also includes a ROS2 node for communication with other modules. 
+2. **Saccade Generation Module**: This module simulates the biological process of saccades, which are rapid eye movements that quickly redirect the focus of the eye to a new position. The module uses NEST, a simulator for spiking neural network models, to construct and simulate a Saccade Generator. The module also includes a ROS2 node for communication with other modules. 
 
 3. **Saliency Module**: The purpose of the saliency module is to simulate the neural processes that highlight regions of an image that are likely to draw attention. It uses a TensorFlow-based saliency model to generate a saliency map from an input image. The module includes a ROS2 node for communication with other modules.
 
@@ -155,3 +155,27 @@ docker-compose up
 ```
 
 To stop the system, press `CTRL+C` in the terminal. This will stop all the running containers.
+
+
+## Contributors
+ 
+The SSU architecture was implemented by Mario Senden<sup>a, b</sup>. The Saccade Generation module is based on a [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator) written by Anno Kurth<sup>c, d, e</sup> with support from Sacha van Albada<sup>c, d, e, f</sup>. The spiking neural network model is itself inspired by work of Gancarz and Grossberg [1]. The Saliency module utilizes the [contextual encoder-decoder network for visual saliency prediction](https://github.com/alexanderkroner/saliency) developed by Alexander Kroner<sup>a, b</sup> [2]. The Scene Classification module utilizes a retinal sampling procedure written by Danny da Costa<sup>a, b</sup> [3].  
+
+**a)** Department of Cognitive Neuroscience, Faculty of Psychology and Neuroscience, Maastricht University, Maastricht, The Netherlands
+
+**b)** Maastricht Brain Imaging Centre, Faculty of Psychology and Neuroscience, Maastricht University, Maastricht, The Netherlands
+
+**c)** Institute of Neuroscience and Medicine (INM-6), Jülich Research Centre, Jülich, Germany
+
+**d)** Institute for Advanced Simulation (IAS-6), Jülich Research Centre, Jülich, Germany
+
+**e)** ARA-Institute Brain Structure-Function Relationships (INM-10), Jülich Research Centre, 	Jülich, Germany
+
+**f)** Institute of Zoology, Faculty of Mathematics and Natural Sciences, University of Cologne, Cologne, Germany
+
+## References
+[1] Gancarz, Gregory, and Stephen Grossberg. "A neural model of the saccade generator in the reticular formation." Neural Networks 11.7-8 (1998): 1159-1174. 
+
+[2] Kroner, A., Senden, M., Driessens, K., & Goebel, R. (2020). Contextual encoder–decoder network for visual saliency prediction. Neural Networks, 129, 261-270.
+
+[3] da Costa, D., Kornemann, L., Goebel, R., & Senden, M. (2023). Unlocking the Secrets of the Primate Visual Cortex: A CNN-Based Approach Traces the Origins of Major Organizational Principles to Retinal Sampling. bioRxiv, 2023-04.
