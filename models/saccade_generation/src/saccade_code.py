@@ -1,6 +1,6 @@
 """
 This module is an adapted version of the spiking neural network model of the saccade 
-generator in the reticular formation, originally developed by Anno Kurth. 
+generator in the reticular formation, originally developed by Anno Kurthwith support from Sacha van Albada. 
 The original work can be found at https://github.com/ccnmaastricht/spiking_saccade_generator.
 
 Adaptations were made to integrate with the larger project structure and to meet specific 
