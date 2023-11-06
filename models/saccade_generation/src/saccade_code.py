@@ -1,7 +1,18 @@
+"""
+This module is an adapted version of the spiking neural network model of the saccade 
+generator in the reticular formation, originally developed by Anno Kurth. 
+The original work can be found at https://github.com/ccnmaastricht/spiking_saccade_generator.
+
+Adaptations were made to integrate with the larger project structure and to meet specific 
+requirements of our implementation. We thank Anno Kurth for their contribution to this project.
+
+:license: CC BY-NC-SA 4.0, see CC_BY_NC_SA_LICENSE.md for more details.
+"""
+
+
 import json
 import nest
 import numpy as np
-
 
 class SaccadeGenerator():
     def __init__(self):
