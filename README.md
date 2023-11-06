@@ -160,7 +160,7 @@ To stop the system, press `CTRL+C` in the terminal. This will stop all the runni
  
 The SSU architecture was implemented by Mario Senden<sup>a, b</sup>. 
 
-The Saccade Generation module is based on a [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator) written by Anno Kurth<sup>c, d, e</sup> with support from Sacha van Albada<sup>c, d, e, f</sup>. The spiking neural network model is itself inspired by work of Gancarz and Grossberg [1]. 
+The Saccade Generation module is adapted from [spiking neural network model of the saccade generator in the reticular formation](https://github.com/ccnmaastricht/spiking_saccade_generator), written by Anno Kurth<sup>c, d, e</sup> with support from Sacha van Albada<sup>c, d, e, f</sup>. The spiking neural network model is itself inspired by work of Gancarz and Grossberg [1]. 
 
 The Saliency module utilizes the [contextual encoder-decoder network for visual saliency prediction](https://github.com/alexanderkroner/saliency) developed by Alexander Kroner<sup>a, b</sup> [2]. 
 
