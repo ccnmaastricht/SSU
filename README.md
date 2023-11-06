@@ -1,5 +1,4 @@
 # SSU Project
-![](https://img.shields.io/github/license/ccnmaastricht/SSU)
 ![](https://img.shields.io/github/issues/ccnmaastricht/SSU)
 ![](https://img.shields.io/github/forks/ccnmaastricht/SSU)
 ![](https://img.shields.io/github/stars/ccnmaastricht/SSU)
