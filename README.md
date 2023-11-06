@@ -165,7 +165,7 @@ The Saccade Generation module is based on a [spiking neural network model of the
 
 The Saliency module utilizes the [contextual encoder-decoder network for visual saliency prediction](https://github.com/alexanderkroner/saliency) developed by Alexander Kroner<sup>a, b</sup> [2]. 
 
-The Scene Classification module utilizes a retinal sampling procedure written by Danny da Costa<sup>a, b</sup> [3].  
+The Scene Classification module utilizes a [retinal sampling procedure](https://github.com/ccnmaastricht/ganglion_cell_sampling) written by Danny da Costa<sup>a, b</sup> [3].  
 
 **a)** Department of Cognitive Neuroscience, Faculty of Psychology and Neuroscience, Maastricht University, Maastricht, The Netherlands
 
